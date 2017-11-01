@@ -22,24 +22,16 @@ public class RobocolDatagramSocket {
 
   private static final boolean DEBUG = false;
   private static final boolean VERBOSE_DEBUG = false;
-
-  public enum State {
-    LISTENING,  /// Socket is ready
-    CLOSED,     /// Socket is not ready
-    ERROR       /// Socket is in error state
-  }
-
+    private final Object recvLock = new Object(); // only one recv() at a time
+    private final Object sendLock = new Object(); // only one send() at a time
+    private final Object bindCloseLock = new Object(); // serializes bind() vs close()
   private       DatagramSocket  socket;
   private       int             receiveBufferSize;
   private       int             sendBufferSize;
   private       int             msReceiveTimeout;
   volatile private State        state;
-  private final Object          recvLock = new Object(); // only one recv() at a time
-  private final Object          sendLock = new Object(); // only one send() at a time
-  private final Object          bindCloseLock = new Object(); // serializes bind() vs close()
   private       boolean         sendErrorReported = false;
   private       boolean recvErrorReported = false;
-
   public RobocolDatagramSocket() {
     state = State.CLOSED;
   }
@@ -135,12 +127,12 @@ public class RobocolDatagramSocket {
       } catch (SocketException|SocketTimeoutException e) {
         if (!recvErrorReported) {
           recvErrorReported = !DEBUG;
-          RobotLog.logExceptionHeader(e, TAG, "no packet received");
+            RobotLog.logExceptionHeader(TAG, e, "no packet received");
         }
         return null;
 
       } catch (IOException|RuntimeException e) {
-        RobotLog.logExceptionHeader(e, TAG, "no packet received");
+          RobotLog.logExceptionHeader(TAG, e, "no packet received");
         return null;
       }
 
@@ -171,4 +163,10 @@ public class RobocolDatagramSocket {
   public boolean isClosed() {
     return (state == State.CLOSED);
   }
+
+    public enum State {
+        LISTENING,  /// Socket is ready
+        CLOSED,     /// Socket is not ready
+        ERROR       /// Socket is in error state
+    }
 }

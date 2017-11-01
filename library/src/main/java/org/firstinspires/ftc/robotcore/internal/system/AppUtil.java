@@ -78,6 +78,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,43 +130,36 @@ public class AppUtil
     //----------------------------------------------------------------------------------------------
 
     public static final String TAG= "AppUtil";
-
-    private static class InstanceHolder
-        {
-        public static AppUtil theInstance = new AppUtil();
-        }
-
-    public static AppUtil getInstance()
-        {
-        return InstanceHolder.theInstance;
-        }
-
-    public static Context getDefContext()
-        {
-        return getInstance().getApplication();
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
-
     private @NonNull Application application;
     private LifeCycleMonitor    lifeCycleMonitor;
     private Activity            rootActivity;
-    private Activity            currentActivity;
+
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+        private Activity            currentActivity;
     private ProgressDialog      currentProgressDialog;
+        private Random random;
+        private Map<String, DialogContext> dialogContextMap = new ConcurrentHashMap<>();
+
+        protected AppUtil() {
+        }
+
+        public static AppUtil getInstance() {
+            return InstanceHolder.theInstance;
+        }
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
+        public static Context getDefContext() {
+            return getInstance().getApplication();
+        }
+
     public static void onApplicationStart(@NonNull Application application)
         {
         getInstance().initialize(application);
-        }
-
-    protected AppUtil()
-        {
         }
 
     protected void initialize(@NonNull Application application)
@@ -174,6 +168,7 @@ public class AppUtil
         rootActivity     = null;
         currentActivity  = null;
         currentProgressDialog = null;
+            random = new Random();
 
         application.registerActivityLifecycleCallbacks(lifeCycleMonitor);
 
@@ -227,11 +222,18 @@ public class AppUtil
                 // Successfully newly created the dir. Notify MTP. However, MTP doesn't like to be
                 // notified of directories. So we make a temp file, notify on that, then delete same
                 // once the scan has completed.
-                if (notify) MediaTransferProtocolMonitor.makeIndicatorFile(directory);
+                    if (notify) {
+                        MediaTransferProtocolMonitor.makeIndicatorFile(directory);
+                    }
                 }
             else
                 {
-                // already existed, or error; latter ignored. Clean up any indicator files.
+                    // already existed, or error; latter logged & ignored. Try to clean up any indicator files.
+                    if (directory.isDirectory()) {
+                        // all is well
+                    } else {
+                        RobotLog.ee(TAG, "failed to create directory %s", directory);
+                    }
                 if (notify)
                     {
                     MediaTransferProtocolMonitor.renoticeIndicatorFiles(directory);
@@ -390,6 +392,31 @@ public class AppUtil
             if (cbRead <= 0) break;
             outputStream.write(buffer, 0, cbRead);
             }
+        }
+
+        public File createTempFile(@NonNull String prefix, @Nullable String suffix, @Nullable File directory) throws IOException {
+            return File.createTempFile(prefix, suffix, directory);
+        }
+
+        public File createTempDirectory(@NonNull String prefix, @Nullable String suffix, @Nullable File directory) throws IOException {
+            /** @see File#createTempFile */
+            if (prefix.length() < 3) {
+                throw new IllegalArgumentException("prefix must be at least 3 characters");
+            }
+            if (suffix == null) {
+                suffix = ".tmp";
+            }
+            File tmpDirFile = directory;
+            if (tmpDirFile == null) {
+                String tmpDir = System.getProperty("java.io.tmpdir", ".");
+                tmpDirFile = new File(tmpDir);
+            }
+            File result;
+            do {
+                result = new File(tmpDirFile, prefix + random.nextInt() + suffix);
+            }
+            while (!result.mkdir()); // mkdir returns false failure or if the directory already existed.
+            return result;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -711,47 +738,16 @@ public class AppUtil
     // https://developer.android.com/guide/topics/ui/dialogs.html
     //----------------------------------------------------------------------------------------------
 
-    public enum DialogFlavor { ALERT, CONFIRM, PROMPT }
-
-    private Map<String, DialogContext> dialogContextMap = new ConcurrentHashMap<>();
-
-    public static class DialogContext
-        {
-        public enum Outcome { UNKNOWN, CANCELLED, CONFIRMED }
-
-        public final CountDownLatch dismissed = new CountDownLatch(1);
-
-        protected final String         uuidString;
-        protected AlertDialog          dialog;
-        protected boolean              isArmed = true;
-        protected Outcome              outcome = Outcome.UNKNOWN;
-        protected CharSequence         textResult = null;
-        protected EditText             input = null;
-
-        public DialogContext(String uuidString)
-            {
-            this.uuidString = uuidString;
-            }
-
-        public Outcome getOutcome()
-            {
-            return outcome;
-            }
-
-        public CharSequence getText()
-            {
-            return textResult;
-            }
-        }
-
     public DialogContext showAlertDialog(UILocation uiLocation, String title, String message)
         {
         return showAlertDialog(uiLocation, getActivity(), title, message);
         }
+
     public DialogContext showAlertDialog(String uuidString, UILocation uiLocation, String title, String message) // for remoting
         {
         return showDialog(uuidString, uiLocation, DialogFlavor.ALERT, getActivity(), title, message, null, null);
         }
+
     public synchronized DialogContext showAlertDialog(final UILocation uiLocation, final Activity activity, final String title, final String message)
         {
         return showDialog(uiLocation, DialogFlavor.ALERT, activity, title, message, null, null);
@@ -928,10 +924,6 @@ public class AppUtil
             }
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Toast
-    //----------------------------------------------------------------------------------------------
-
     /**
      * Displays a toast message to the user. May be called from any thread.
      */
@@ -939,14 +931,21 @@ public class AppUtil
         {
         showToast(uiLocation, getActivity(), getApplication(), msg);
         }
+
     public void showToast(UILocation uiLocation, String msg, int duration)
         {
         showToast(uiLocation, getActivity(), getApplication(), msg, duration);
         }
+
     public void showToast(UILocation uiLocation, Context context, String msg )
         {
         showToast(uiLocation, getActivity(), context, msg);
         }
+
+        //----------------------------------------------------------------------------------------------
+        // Toast
+        //----------------------------------------------------------------------------------------------
+
     public void showToast(UILocation uiLocation, final Activity activity, Context context, String msg)
         {
         showToast(uiLocation, activity, context, msg, Toast.LENGTH_SHORT);
@@ -975,10 +974,6 @@ public class AppUtil
             }
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Activities
-    //----------------------------------------------------------------------------------------------
-
     /**
      * Returns the contextually running {@link Activity}
      * @return the contextually running {@link Activity}
@@ -1006,53 +1001,8 @@ public class AppUtil
             }
         }
 
-    /**
-     * {@link LifeCycleMonitor} is a class that allows us to keep track of the currently active Activity.
-     */
-    private class LifeCycleMonitor implements Application.ActivityLifecycleCallbacks
-        {
-        @Override public void onActivityCreated(Activity activity, Bundle savedInstanceState)
-            {
-            currentActivity = activity;
-            initializeRootActivityIfNecessary();
-            }
-
-        @Override public void onActivityStarted(Activity activity)
-            {
-            currentActivity = activity;
-            initializeRootActivityIfNecessary();
-            }
-
-        @Override public void onActivityResumed(Activity activity)
-            {
-            currentActivity = activity;
-            initializeRootActivityIfNecessary();
-            }
-
-        @Override public void onActivityPaused(Activity activity)
-            {
-            }
-
-        @Override public void onActivityStopped(Activity activity)
-            {
-            }
-
-        @Override public void onActivitySaveInstanceState(Activity activity, Bundle outState)
-            {
-            }
-
-        @Override public void onActivityDestroyed(Activity activity)
-            {
-            if (activity == rootActivity && rootActivity != null)
-                {
-                RobotLog.vv(TAG, "rootActivity=%s destroyed", rootActivity.getClass().getSimpleName());
-                rootActivity = null;
-                }
-            }
-        }
-
     //----------------------------------------------------------------------------------------------
-    // Date and time
+        // Activities
     //----------------------------------------------------------------------------------------------
 
     public SimpleDateFormat getIso8601DateFormat()
@@ -1062,10 +1012,6 @@ public class AppUtil
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter;
         }
-
-    //----------------------------------------------------------------------------------------------
-    // System
-    //----------------------------------------------------------------------------------------------
 
     public RuntimeException unreachable()
         {
@@ -1082,10 +1028,18 @@ public class AppUtil
         return failFast(tag, "internal error: this code is unreachable");
         }
 
+        //----------------------------------------------------------------------------------------------
+        // Date and time
+        //----------------------------------------------------------------------------------------------
+
     public RuntimeException unreachable(String tag, Throwable throwable)
         {
         return failFast(tag, throwable, "internal error: this code is unreachable");
         }
+
+        //----------------------------------------------------------------------------------------------
+        // System
+        //----------------------------------------------------------------------------------------------
 
     public RuntimeException failFast(String tag, String format, Object... args)
         {
@@ -1111,6 +1065,79 @@ public class AppUtil
         RobotLog.ee(tag, throwable, message);
         exitApplication(-1);
         return new RuntimeException("keep compiler happy", throwable);
+        }
+
+        public enum DialogFlavor {ALERT, CONFIRM, PROMPT}
+
+        private static class InstanceHolder {
+            public static AppUtil theInstance = new AppUtil();
+        }
+
+        public static class DialogContext {
+            public final CountDownLatch dismissed = new CountDownLatch(1);
+            protected final String uuidString;
+            protected AlertDialog dialog;
+            protected boolean isArmed = true;
+            protected Outcome outcome = Outcome.UNKNOWN;
+            protected CharSequence textResult = null;
+            protected EditText input = null;
+
+            public DialogContext(String uuidString) {
+                this.uuidString = uuidString;
+            }
+
+            public Outcome getOutcome() {
+                return outcome;
+            }
+
+            public CharSequence getText() {
+                return textResult;
+            }
+
+            public enum Outcome {UNKNOWN, CANCELLED, CONFIRMED}
+        }
+
+        /**
+         * {@link LifeCycleMonitor} is a class that allows us to keep track of the currently active Activity.
+         */
+        private class LifeCycleMonitor implements Application.ActivityLifecycleCallbacks {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                currentActivity = activity;
+                initializeRootActivityIfNecessary();
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                currentActivity = activity;
+                initializeRootActivityIfNecessary();
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                currentActivity = activity;
+                initializeRootActivityIfNecessary();
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                if (activity == rootActivity && rootActivity != null) {
+                    RobotLog.vv(TAG, "rootActivity=%s destroyed", rootActivity.getClass().getSimpleName());
+                    rootActivity = null;
+                }
+            }
         }
 
     }
