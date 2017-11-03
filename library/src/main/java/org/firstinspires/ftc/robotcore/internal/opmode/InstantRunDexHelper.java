@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.List;
 
 import dalvik.system.DexFile;
+
 @SuppressWarnings("WeakerAccess")
 public class InstantRunDexHelper {
 
@@ -56,8 +57,7 @@ public class InstantRunDexHelper {
      * @param context the application context
      * @return A list of class names
      */
-    public static List<String> getAllClassNames(Context context)
-    {
+    public static List<String> getAllClassNames(Context context) {
         ApplicationInfo applicationInfo = null;
         List<String> classNames = new ArrayList<String>();
 
@@ -89,6 +89,11 @@ public class InstantRunDexHelper {
                     RobotLog.ee(TAG, e, "Error loading dex file: " + f.toString() + ", IOException: " + e.toString());
                 }
             }
+        }
+        try {
+            classNames.addAll(MultiDexHelper.getAllClasses(context));
+        } catch (PackageManager.NameNotFoundException | IOException e) {
+            RobotLog.ee(TAG, e, "Error loading extra dex files.");
         }
         return classNames;
     }
