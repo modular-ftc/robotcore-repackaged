@@ -43,7 +43,9 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import dalvik.system.DexFile;
@@ -66,19 +68,18 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
     // State
     //----------------------------------------------------------------------------------------------
 
-    public static final String TAG = OnBotJavaManager.TAG + ":ClassLoader";
+        public static final String TAG = "OnBotJava:ClassLoader";
 
     protected List<File>    jarFiles;
     protected List<DexFile> dexFiles;
 
-    //----------------------------------------------------------------------------------------------
-    // Construction
-    //----------------------------------------------------------------------------------------------
-
-    public OnBotJavaClassLoader()
-        {
-        this(OnBotJavaClassLoader.class.getClassLoader(), OnBotJavaManager.getOutputJarFiles());
+        public OnBotJavaClassLoader() {
+            this(OnBotJavaClassLoader.class.getClassLoader(), getFiles());
         }
+
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
 
     public OnBotJavaClassLoader(ClassLoader parentClassLoader, List<File> jarFiles)
         {
@@ -108,13 +109,15 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
             }
         }
 
-    public void close()
-        {
-        for (DexFile dexFile : dexFiles)
-            {
-            closeDexFile(dexFile);
+        private static List<File> getFiles() {
+            List<File> jarFiles = new ArrayList<>();
+            try {
+                //noinspection unchecked
+                jarFiles.addAll((Collection<? extends File>) Class.forName("org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaManager").getMethod("getOutputJarFiles").invoke(null));
+            } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                RobotLog.ii(TAG, "OnBotJava not initialized.", e);
             }
-        dexFiles.clear();   // make idempotent
+            return jarFiles;
         }
 
     protected static File getDexCacheDir()
@@ -131,12 +134,6 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
             return dexCache;
         }
 
-    protected File getDexCache(File jarFile)
-        {
-        // Note: the jar file needs to be uniquely *named* to its contents
-        return new File(getDexCacheDir(), jarFile.getAbsolutePath().replace(File.separatorChar, '@') + "@classes.dex");
-        }
-
     public static void fullClean()
         {
         for (File child : AppUtil.getInstance().filesUnder(getDexCacheDir()))
@@ -146,16 +143,28 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
             }
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Operations & accessing
-    //----------------------------------------------------------------------------------------------
-
     public static boolean isOnBotJava(Class clazz)
         {
         ClassLoader classLoader = clazz.getClassLoader();
         boolean result = classLoader instanceof OnBotJavaClassLoader;
         // RobotLog.vv(TAG, "isOnBotJava: class=%s loader=%s: %s", clazz.getSimpleName(), classLoader.getClass().getSimpleName(), result);
         return result;
+        }
+
+        public void close() {
+            for (DexFile dexFile : dexFiles) {
+                closeDexFile(dexFile);
+            }
+            dexFiles.clear();   // make idempotent
+        }
+
+        //----------------------------------------------------------------------------------------------
+        // Operations & accessing
+        //----------------------------------------------------------------------------------------------
+
+        protected File getDexCache(File jarFile) {
+            // Note: the jar file needs to be uniquely *named* to its contents
+            return new File(getDexCacheDir(), jarFile.getAbsolutePath().replace(File.separatorChar, '@') + "@classes.dex");
         }
 
     public List<File> getJarFiles()

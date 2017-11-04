@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.robotcore.internal.opmode;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -64,73 +63,67 @@ public class RegisteredOpModes implements OpModeManager
     //----------------------------------------------------------------------------------------------
 
     public static final String TAG = "RegisteredOpModes";
-
-    protected static class InstanceHolder
-        {
-        public static final RegisteredOpModes theInstance = new RegisteredOpModes();
-        }
-    public static RegisteredOpModes getInstance() { return InstanceHolder.theInstance; }
-
     protected final Object opModesLock = new Object();
+        protected final List<InstanceOpModeRegistrar> instanceOpModeRegistrars = new ArrayList<InstanceOpModeRegistrar>();
     protected boolean opModesAreLocked = false;
     protected Map<String, OpModeMetaAndClass> opModeClasses = new LinkedHashMap<String, OpModeMetaAndClass>();
     protected Map<String, OpModeMetaAndInstance> opModeInstances = new LinkedHashMap<String, OpModeMetaAndInstance>();
     protected volatile boolean opmodesAreRegistered = false;
-
-    protected final List<InstanceOpModeRegistrar> instanceOpModeRegistrars = new ArrayList<InstanceOpModeRegistrar>();
-
     protected RecursiveFileObserver blocksOpModeMonitor;
     protected volatile boolean      blocksOpModesChanged;
     protected FileModifyObserver    onBotJavaMonitor;
     protected volatile boolean      onBotJavaChanged;
-
-    //----------------------------------------------------------------------------------------------
-    // Construction
-    //----------------------------------------------------------------------------------------------
-
     public RegisteredOpModes()
         {
         // Setup OnBotJava monitoring system
         onBotJavaChanged = false;
-        onBotJavaMonitor = new FileModifyObserver(OnBotJavaManager.buildSuccessfulFile, new FileModifyObserver.Listener()
-            {
-            @Override
-            public void onFileChanged(int event, File file)
-                {
-                RobotLog.vv(TAG, "noting that OnBotJava changed");
-                onBotJavaChanged = true;
-                }
-            });
 
-        // Setup Blocks monitoring system
-        blocksOpModesChanged = false;
-        final int blocksOpModeMonitorAccess = RecursiveFileObserver.CLOSE_WRITE | RecursiveFileObserver.DELETE | RecursiveFileObserver.MOVED_FROM | RecursiveFileObserver.MOVED_TO;
-        blocksOpModeMonitor = new RecursiveFileObserver(AppUtil.BLOCK_OPMODES_DIR, blocksOpModeMonitorAccess, RecursiveFileObserver.Mode.NONRECURSVIVE, new RecursiveFileObserver.Listener()
-            {
-            @Override
-            public void onEvent(int event, File file)
-                {
-                if ((event & blocksOpModeMonitorAccess) != 0)
-                    {
-                    if (file.getName().endsWith(AppUtil.BLOCKS_JS_EXT) || file.getName().endsWith(AppUtil.BLOCKS_BLK_EXT))
-                        {
-                        RobotLog.vv(TAG, "noting that Blocks changed");
-                        blocksOpModesChanged = true;
+            try {
+                onBotJavaMonitor = new FileModifyObserver((File) Class.forName("org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaManager").getField("buildSuccessfulFile").get(null), new FileModifyObserver.Listener() {
+                    @Override
+                    public void onFileChanged(int event, File file) {
+                        RobotLog.vv(TAG, "noting that OnBotJava changed");
+                        onBotJavaChanged = true;
+                    }
+                });
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                RobotLog.ii(TAG, "OnBotJava loading errored, running in lite mode.", e);
+            }
+
+            // Setup Blocks monitoring system
+            blocksOpModesChanged = false;
+            final int blocksOpModeMonitorAccess = RecursiveFileObserver.CLOSE_WRITE | RecursiveFileObserver.DELETE | RecursiveFileObserver.MOVED_FROM | RecursiveFileObserver.MOVED_TO;
+            blocksOpModeMonitor = new RecursiveFileObserver(AppUtil.BLOCK_OPMODES_DIR, blocksOpModeMonitorAccess, RecursiveFileObserver.Mode.NONRECURSVIVE, new RecursiveFileObserver.Listener() {
+                @Override
+                public void onEvent(int event, File file) {
+                    if ((event & blocksOpModeMonitorAccess) != 0) {
+                        if (file.getName().endsWith(AppUtil.BLOCKS_JS_EXT) || file.getName().endsWith(AppUtil.BLOCKS_BLK_EXT)) {
+                            RobotLog.vv(TAG, "noting that Blocks changed");
+                            blocksOpModesChanged = true;
                         }
                     }
                 }
             });
-        blocksOpModeMonitor.startWatching();
+            blocksOpModeMonitor.startWatching();
+        }
+
+        public static RegisteredOpModes getInstance() {
+            return InstanceHolder.theInstance;
         }
 
     //----------------------------------------------------------------------------------------------
-    // Change management
+        // Construction
     //----------------------------------------------------------------------------------------------
 
     public boolean getOnBotJavaChanged()
         {
         return onBotJavaChanged;
         }
+
+        //----------------------------------------------------------------------------------------------
+        // Change management
+        //----------------------------------------------------------------------------------------------
+
     public void clearOnBotJavaChanged()
         {
         onBotJavaChanged = false;
@@ -140,14 +133,11 @@ public class RegisteredOpModes implements OpModeManager
         {
         return blocksOpModesChanged;
         }
+
     public void clearBlocksOpModesChanged()
         {
         blocksOpModesChanged = false;
         }
-
-    //----------------------------------------------------------------------------------------------
-    // OpMode management
-    //----------------------------------------------------------------------------------------------
 
     public void addInstanceOpModeRegistrar(InstanceOpModeRegistrar register)
         {
@@ -156,6 +146,10 @@ public class RegisteredOpModes implements OpModeManager
             instanceOpModeRegistrars.add(register);
             }
         }
+
+        //----------------------------------------------------------------------------------------------
+        // OpMode management
+        //----------------------------------------------------------------------------------------------
 
     public void registerAllOpModes(final OpModeRegister userOpmodeRegister)
         {
@@ -370,10 +364,6 @@ public class RegisteredOpModes implements OpModeManager
         return opModeClasses.containsKey(meta.name) || opModeInstances.containsKey(meta.name);
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Registration and unregistration
-    //----------------------------------------------------------------------------------------------
-
     /**
      * Registers an OpMode <em>class</em> with the name by which it should be known in the driver station.
      *
@@ -384,6 +374,10 @@ public class RegisteredOpModes implements OpModeManager
         {
         register(new OpModeMeta(name), opMode);
         }
+
+        //----------------------------------------------------------------------------------------------
+        // Registration and unregistration
+        //----------------------------------------------------------------------------------------------
 
     public void register(final OpModeMeta meta, final Class opMode)
         {
@@ -448,6 +442,10 @@ public class RegisteredOpModes implements OpModeManager
                 Assert.assertFalse(isOpmodeRegistered(meta));
                 }
             });
+        }
+
+        protected static class InstanceHolder {
+            public static final RegisteredOpModes theInstance = new RegisteredOpModes();
         }
 
     }
