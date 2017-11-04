@@ -41,9 +41,10 @@ import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDeviceImplBase;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbManager;
-import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbException;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.SerialNumber;
+
+import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbException;
 
 import java.io.File;
 import java.io.IOException;
@@ -147,8 +148,8 @@ public class RobotUsbManagerTty implements RobotUsbManager
 
     private static File findSerialDevTty()
         {
-        // Older versions of Dragonboard software have the serial port named “/dev/ttyHS0”, while new
-        // versions have the name “/dev/ttyHS4”. Try that guy explicitly, first.
+        // Older versions of Dragonboard software have the serial port named "/dev/ttyHS0", while new
+        // versions have the name "/dev/ttyHS4". Try that guy explicitly, first.
         File result = new File("/dev/ttyHS4");
         if (result.exists())
             {

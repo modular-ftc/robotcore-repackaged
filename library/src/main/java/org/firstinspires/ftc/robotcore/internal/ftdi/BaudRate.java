@@ -132,11 +132,11 @@ public final class BaudRate extends FtConstants
                         }
                     else if (t <= 18)
                         {
-                        modifier = '쀀';
+                        modifier = '\uc000';
                         }
                     else if (t <= 37)
                         {
-                        modifier = '耀';
+                        modifier = '\u8000';
                         }
                     else if (t <= 75)
                         {
@@ -154,11 +154,11 @@ public final class BaudRate extends FtConstants
                     }
                 else if (t <= 18)
                     {
-                    modifier = '쀀';
+                    modifier = '\uc000';
                     }
                 else if (t <= 31)
                     {
-                    modifier = '耀';
+                    modifier = '\u8000';
                     }
                 else if (t <= 43)
                     {
@@ -176,12 +176,12 @@ public final class BaudRate extends FtConstants
                     }
                 else if (t <= 81)
                     {
-                    modifier = '耀';
+                    modifier = '\u8000';
                     divisors[1] = 1;
                     }
                 else if (t <= 93)
                     {
-                    modifier = '쀀';
+                    modifier = '\uc000';
                     divisors[1] = 1;
                     }
                 else
@@ -354,11 +354,11 @@ public final class BaudRate extends FtConstants
                         }
                     else if (t <= 18)
                         {
-                        modifier = '쀀';
+                        modifier = '\uc000';
                         }
                     else if (t <= 31)
                         {
-                        modifier = '耀';
+                        modifier = '\u8000';
                         }
                     else if (t <= 43)
                         {
@@ -376,12 +376,12 @@ public final class BaudRate extends FtConstants
                         }
                     else if (t <= 81)
                         {
-                        modifier = '耀';
+                        modifier = '\u8000';
                         divisors[1] |= 1;
                         }
                     else if (t <= 93)
                         {
-                        modifier = '쀀';
+                        modifier = '\uc000';
                         divisors[1] |= 1;
                         }
                     else
@@ -410,7 +410,7 @@ public final class BaudRate extends FtConstants
         else
             {
             int rate = (divisor & -49153) * 100;
-            extdiv &= '�';
+            extdiv &= '\ufffd';
             if (extdiv == 0)
                 {
                 switch (divisor & 49152)

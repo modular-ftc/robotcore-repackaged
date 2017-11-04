@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.robotcore.internal.opmode;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -81,7 +80,7 @@ public class RegisteredOpModes implements OpModeManager
 
     protected RecursiveFileObserver blocksOpModeMonitor;
     protected volatile boolean      blocksOpModesChanged;
-    protected FileModifyObserver    onBotJavaMonitor;
+        protected FileModifyObserver onBotJavaMonitor;
     protected volatile boolean      onBotJavaChanged;
 
     //----------------------------------------------------------------------------------------------
@@ -92,6 +91,7 @@ public class RegisteredOpModes implements OpModeManager
         {
         // Setup OnBotJava monitoring system
         onBotJavaChanged = false;
+        /*
         onBotJavaMonitor = new FileModifyObserver(OnBotJavaManager.buildSuccessfulFile, new FileModifyObserver.Listener()
             {
             @Override
@@ -101,6 +101,7 @@ public class RegisteredOpModes implements OpModeManager
                 onBotJavaChanged = true;
                 }
             });
+            */
 
         // Setup Blocks monitoring system
         blocksOpModesChanged = false;

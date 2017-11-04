@@ -124,7 +124,7 @@ public class FT_EE_245R_Ctrl extends FT_EE_Ctrl
                     }
                 else
                     {
-                    var17 &= '�';
+                    var17 &= '\ufffd';
                     }
 
                 data[0] = var17;
@@ -170,7 +170,7 @@ public class FT_EE_245R_Ctrl extends FT_EE_Ctrl
 
                 if (eeprom.InvertRI)
                     {
-                    wordx05 |= '耀';
+                    wordx05 |= '\u8000';
                     }
 
                 data[5] = wordx05;
@@ -329,7 +329,7 @@ public class FT_EE_245R_Ctrl extends FT_EE_Ctrl
                 eeprom.InvertDCD = false;
                 }
 
-            if ((data[5] & '耀') == '耀')
+            if ((data[5] & '\u8000') == '\u8000')
                 {
                 eeprom.InvertRI = true;
                 }

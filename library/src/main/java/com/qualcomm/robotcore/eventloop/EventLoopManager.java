@@ -31,11 +31,9 @@
 package com.qualcomm.robotcore.eventloop;
 
 import android.content.Context;
-import android.hardware.usb.UsbDevice;
 import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.EventLoopManagerClient;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -49,7 +47,6 @@ import com.qualcomm.robotcore.robot.RobotState;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.util.SerialNumber;
 import com.qualcomm.robotcore.util.ThreadPool;
 import com.qualcomm.robotcore.wifi.NetworkConnection;
 import com.qualcomm.robotcore.wifi.NetworkType;
@@ -63,7 +60,6 @@ import org.firstinspires.ftc.robotcore.internal.network.RobotCoreCommandList;
 import org.firstinspires.ftc.robotcore.internal.network.SendOnceRunnable;
 import org.firstinspires.ftc.robotcore.internal.network.SocketConnect;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
-import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 
 import java.net.InetAddress;
 import java.util.Set;
@@ -154,10 +150,6 @@ public class EventLoopManager implements RecvLoopRunnable.RecvLoopCallback, Netw
   //------------------------------------------------------------------------------------------------
   // Accessors
   //------------------------------------------------------------------------------------------------
-
-  public @NonNull WebServer getWebServer() {
-    return eventLoopManagerClient.getWebServer();
-  }
 
   /**
    * Set a monitor for this event loop
