@@ -22,7 +22,7 @@ android {
 
 group = 'com.github.modular-ftc'
 version = android.defaultConfig.versionName
-project.archivesBaseName = 'robotcore-repackaged-lite'
+project.archivesBaseName = 'robotcore-repackaged'
 
 dependencies {
     implementation 'com.android.support:support-annotations:27.0.0'
