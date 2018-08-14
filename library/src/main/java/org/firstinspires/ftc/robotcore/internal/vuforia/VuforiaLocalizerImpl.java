@@ -152,8 +152,8 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
     protected   final Object            startStopLock           = new Object();
     public static class ViewPort
         {
-        Point   lowerLeft = new Point();
-        Point   extent    = new Point();
+        public Point   lowerLeft = new Point();
+        public Point   extent    = new Point();
         public @Override String toString() { return String.format("[(%d,%d)-(%d,%d)]", lowerLeft.x, lowerLeft.y, extent.x, extent.y); }
         }
     protected   ViewPort                viewport                    = null;
@@ -883,6 +883,15 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
             }
         }
 
+    /**
+     * onRenderFrame()
+     *
+     * Noop.  Intended as an entry point for user defined overlaying of the SDK's built in camera rendering.
+     */
+    public void onRenderFrame()
+        {
+        }
+
     protected void renderFrame()
         {
         if (glSurface == null)
@@ -926,6 +935,9 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
                     }
                 }
             }
+
+        // Let the user do something interesting with this frame.
+        onRenderFrame();
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         renderer.end();

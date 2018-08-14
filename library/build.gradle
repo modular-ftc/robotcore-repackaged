@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 19
-        versionCode 8
-        versionName "3.5.5"
+        versionCode 10
+        versionName "3.7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -29,11 +29,11 @@ version = android.defaultConfig.versionName
 project.archivesBaseName = 'robotcore-repackaged'
 
 dependencies {
-    implementation 'com.android.support:support-annotations:27.0.0'
+    implementation 'com.android.support:support-annotations:27.1.1'
 
-    implementation 'com.github.modular-ftc:vuforia-repackaged:3.5.0'
+    implementation 'com.github.modular-ftc:vuforia-repackaged:3.7.0'
 
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.danilopianini:gson-extras:0.2.1'
 
     implementation 'com.google.errorprone:javac:1.8.0-u20'
