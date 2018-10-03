@@ -32,31 +32,31 @@
         <item>@string/tokenThemeOrange</item>
         <item>@string/tokenThemeTeal</item>
     </string-array>
+    <string-array name="networkTypes">
+        <item>"Wifi Direct"</item>
+        <item>"Control Hub"</item>
+    </string-array>
     <string-array name="wifi_direct_channels">
         <item>Auto – device selects channel|0</item>
-        <item>Channel  1 – 2.412 GHz|1</item>
-        <item>Channel  2 – 2.417 GHz|2</item>
-        <item>Channel  3 – 2.422 GHz|3</item>
-        <item>Channel  4 – 2.427 GHz|4</item>
-        <item>Channel  5 – 2.432 GHz|5</item>
-        <item>Channel  6 – 2.437 GHz|6</item>
-        <item>Channel  7 – 2.442 GHz|7</item>
-        <item>Channel  8 – 2.447 GHz|8</item>
-        <item>Channel  9 – 2.452 GHz|9</item>
-        <item>Channel 10 – 2.457 GHz|10</item>
-        <item>Channel 11 – 2.462 GHz|11</item>
-        <!--
-        <item>5GHz, Channel 36</item>
-        <item>5GHz, Channel 40</item>
-        <item>5GHz, Channel 44</item>
-        <item>5GHz, Channel 48</item>
-        -->
-        <!--
-        <item>5GHz, Channel 149</item>
-        <item>5GHz, Channel 153</item>
-        <item>5GHz, Channel 157</item>
-        <item>5GHz, Channel 161</item>
-        -->
+        <item>Channel   1 – 2.412 GHz|1</item>
+        <item>Channel   2 – 2.417 GHz|2</item>
+        <item>Channel   3 – 2.422 GHz|3</item>
+        <item>Channel   4 – 2.427 GHz|4</item>
+        <item>Channel   5 – 2.432 GHz|5</item>
+        <item>Channel   6 – 2.437 GHz|6</item>
+        <item>Channel   7 – 2.442 GHz|7</item>
+        <item>Channel   8 – 2.447 GHz|8</item>
+        <item>Channel   9 – 2.452 GHz|9</item>
+        <item>Channel  10 – 2.457 GHz|10</item>
+        <item>Channel  11 – 2.462 GHz|11</item>
+        <item>Channel  36 – 5.180 GHz|36</item>
+        <item>Channel  40 – 5.200 GHz|40</item>
+        <item>Channel  44 – 5.220 GHz|44</item>
+        <item>Channel  48 – 5.240 GHz|48</item>
+        <item>Channel 149 – 5.745 GHz|149</item>
+        <item>Channel 153 – 5.765 GHz|153</item>
+        <item>Channel 157 – 5.785 GHz|157</item>
+        <item>Channel 161 – 5.805 GHz|161</item>
     </string-array>
     <attr format="color" name="backgroundAlmostDark"/>
     <attr format="color" name="backgroundDark"/>
@@ -179,7 +179,6 @@
     <string name="actionlistenerfailure_unknown">Error: UNKNOWN</string>
     <string name="adafruit_imu_description">an Adafruit IMU</string>
     <string name="adafruit_imu_name">Adafruit IMU</string>
-    <string name="adafruit_imu_xmltag">AdafruitBNO055IMU</string>
     <string name="appNameDriverStation">Driver Station</string>
     <string name="appNameRobotController">Robot Controller</string>
     <string name="appNameUnknown">Unknown Application</string>
@@ -188,6 +187,7 @@
     <string name="app_name">RobotCore</string>
     <string name="buttonNameCancel">Cancel</string>
     <string name="buttonNameOK">OK</string>
+    <string name="buttonWirelessApSettingsLabel">Wifi Settings</string>
     <string name="configGivingUpOnCommand">Giving up on command %1$s(%2$d) after %3$d attempts</string>
     <string name="configTypeAdafruitColorSensor">Adafruit Color Sensor</string>
     <string name="configTypeAnalogInput">Analog Input</string>
@@ -196,6 +196,7 @@
     <string name="configTypeContinuousRotationServo">Continuous Rotation Servo</string>
     <string name="configTypeDeviceInterfaceModule">Device Interface Module</string>
     <string name="configTypeDigitalDevice">Digital Device</string>
+    <string name="configTypeDigitalDevices">Digital Devices</string>
     <string name="configTypeGyro">Gyro</string>
     <string name="configTypeHTAccelerometer">HT Accelerometer</string>
     <string name="configTypeHTColorSensor">HT Color Sensor</string>
@@ -206,6 +207,7 @@
     <string name="configTypeHTTouchSensorMultiplexer">HT Touch Sensor Mux</string>
     <string name="configTypeI2cDevice">I2C Device</string>
     <string name="configTypeI2cDeviceSynch">I2C Device (Synchronous)</string>
+    <string name="configTypeI2cDevices">I2C Devices</string>
     <string name="configTypeIrSeekerV3">MR IR Seeker v3</string>
     <string name="configTypeLED">LED</string>
     <string name="configTypeLegacyModuleController">Legacy Module Controller</string>
@@ -218,16 +220,23 @@
     <string name="configTypeMatrixController">Matrix Controller</string>
     <string name="configTypeMotor">Motor</string>
     <string name="configTypeMotorController">Motor Controller</string>
+    <string name="configTypeMotors">Motors</string>
     <string name="configTypeNXTTouchSensor">NXT Touch Sensor</string>
     <string name="configTypeNXTUltrasonicSensor">NXT Ultrasonic Sensor</string>
     <string name="configTypeNothing">Nothing</string>
     <string name="configTypeOpticalDistanceSensor">MR Optical Distance Sensor</string>
     <string name="configTypePulseWidthDevice">Pulse Width Device</string>
+    <string name="configTypePulseWidthDevices">Pulse Width Devices</string>
+    <string name="configTypeRevTouchSensor">REV Touch Sensor</string>
     <string name="configTypeServo">Servo</string>
     <string name="configTypeServoController">Servo Controller</string>
+    <string name="configTypeServos">Servos</string>
     <string name="configTypeUnknown">[Unknown]</string>
+    <string name="configTypeWebcam">Webcam</string>
     <string name="connection_owner_default">NONE</string>
     <string name="connection_owner_password_default">password</string>
+    <string name="continuous_servo_description">a continuous rotation servo</string>
+    <string name="counted_camera_name">Webcam %d</string>
     <string name="counted_device_interface_module_name">Device Interface Module %d</string>
     <string name="counted_imu_name">imu %d</string>
     <string name="counted_legacy_module_name">Legacy Module %d</string>
@@ -235,6 +244,7 @@
     <string name="counted_lynx_usb_device_name">Expansion Hub Portal %d</string>
     <string name="counted_motor_controller_name">Motor Controller %d</string>
     <string name="counted_servo_controller_name">Servo Controller %d</string>
+    <string name="currentApLabel">Current Robot Controller: </string>
     <string name="defaultOpModeName">Stop Robot</string>
     <string name="descriptionLynxEmbeddedModule">Embedded Expansion Hub</string>
     <string name="deviceDisplayNameUnknownUSBDevice">unknown USB device [%s]</string>
@@ -243,8 +253,11 @@
     <string name="dialogMessagePleaseWait">Please wait...</string>
     <string name="displayNameMatrixMotorController">Matrix Motor Controller</string>
     <string name="displayNameMatrixServoController">Matrix Servo Controller</string>
+    <string name="duplicateWebcam">ambiguous device for webcam %1$s</string>
+    <string name="duplicateWebcamWithName">ambiguous device for webcam \"%1$s\" (%2$s)</string>
     <string name="errorOpModeStuck">OpMode \'%1$s\' stuck in %2$s. Restarting robot controller app.</string>
-    <string name="incompatibleAppsError">Incompatible apps: %1$s=v%2$d vs %3$s=v%4$d</string>
+    <string name="incompatibleAppsError">Incompatible apps: %1$s=v%2$d vs %3$s=v%4$d.</string>
+    <string name="led_description">an LED</string>
     <string name="lynxAnalogInputControllerDisplayName">Expansion Hub Analog Input Controller</string>
     <string name="lynxDcMotorControllerDisplayName">Expansion Hub DC Motor Controller</string>
     <string name="lynxDigitalChannelControllerDisplayName">Expansion Hub Digital Channel Controller</string>
@@ -252,16 +265,23 @@
     <string name="lynxModuleDisplayName">Expansion Hub</string>
     <string name="lynxPwmOutputControllerDisplayName">Expansion Hub Pwm Controller</string>
     <string name="lynxServoControllerDisplayName">Expansion Hub Servo Controller</string>
-    <string name="lynxUnavailableFWVersionString">unknown firmware</string>
+    <string name="lynxUnavailableFWVersionString">firmware version unavailable</string>
     <string name="lynxVoltageSensorDisplayName">Expansion Hub Voltage Sensor</string>
     <string name="lynx_embedded_imu_description">an embedded IMU</string>
     <string name="lynx_embedded_imu_name">REV Expansion Hub IMU</string>
-    <string name="lynx_embedded_imu_xmltag">LynxEmbeddedIMU</string>
     <string name="moduleDisplayNameCDIM">Modern Robotics USB Core Device Interface Module</string>
     <string name="moduleDisplayNameLegacyModule">Modern Robotics USB Legacy Module</string>
     <string name="moduleDisplayNameLynxUsbDevice">REV Robotics USB Expansion Hub Portal</string>
     <string name="moduleDisplayNameMotorController">Modern Robotics USB DC Motor Controller</string>
     <string name="moduleDisplayNameServoController">Modern Robotics USB Servo Controller</string>
+    <string name="moduleDisplayNameWebcam">Webcam</string>
+    <string name="mr_compass_description">a MR compass sensor</string>
+    <string name="mr_compass_name">MR Compass Sensor</string>
+    <string name="mr_range_description">a MR range sensor</string>
+    <string name="mr_range_name">MR Range Sensor</string>
+    <string name="mr_touch_sensor_description">a Modern Robotics touch sensor</string>
+    <string name="navx_micro_description">a navX Micro gyro</string>
+    <string name="navx_micro_name">navX Micro</string>
     <string name="networkStatusActive">active</string>
     <string name="networkStatusCreatedAPConnection">active on SSID: %s</string>
     <string name="networkStatusEnabled">enabled</string>
@@ -269,21 +289,32 @@
     <string name="networkStatusInactive">inactive</string>
     <string name="networkStatusInternalError">internal error</string>
     <string name="networkStatusUnknown">unknown</string>
-    <string name="noSerialNumber">USB serial number unknown</string>
+    <string name="network_type_wifi_direct">WifiDirect</string>
+    <string name="network_type_wireless_ap">WirelessAP</string>
+    <string name="noSerialNumber">serial number unknown</string>
     <string name="nxtDcMotorControllerName">Hitechnic DC Motor Controller</string>
     <string name="nxtServoControllerName">Hitechnic Servo Controller</string>
+    <string name="optical_distance_sensor_description">a Modern Robotics optical distance sensor</string>
     <string name="packageName">(packageNameToBeReplaced)</string>
     <string name="packageNameDriverStation" translatable="false">com.qualcomm.ftcdriverstation</string>
     <string name="packageNameRobotController" translatable="false">com.qualcomm.ftcrobotcontroller</string>
+    <string name="pairing_kind_title">"Pairing Method"</string>
     <string name="peerStatusConnected">connected</string>
     <string name="peerStatusDisconnected">disconnected</string>
+    <string name="pref_app_category">pref_app_category</string>
+    <string name="pref_app_category_rc">pref_app_category_rc</string>
     <string name="pref_app_theme">pref_app_theme</string>
     <string name="pref_app_theme_rc">pref_app_theme_rc</string>
+    <string name="pref_app_version">pref_app_version</string>
+    <string name="pref_app_version_rc">pref_app_version_rc</string>
     <string name="pref_autostarted_robot_controller">pref_autostarted_robot_controller</string>
+    <string name="pref_build_time">pref_build_time</string>
+    <string name="pref_build_time_rc">pref_build_time_rc</string>
     <string name="pref_connection_owner_identity">pref_connection_owner_identity</string>
     <string name="pref_connection_owner_password">pref_connection_owner_password</string>
     <string name="pref_debug_driver_station_logs">pref_debug_driver_station_logs</string>
     <string name="pref_device_name">pref_device_name</string>
+    <string name="pref_device_name_internal">pref_device_name_internal</string>
     <string name="pref_device_name_old">pref_device_name_old</string>
     <string name="pref_device_name_rc">pref_device_name_rc</string>
     <string name="pref_device_name_rc_display">pref_device_name_rc_display</string>
@@ -292,6 +323,10 @@
     <string name="pref_gamepad_user2_type_key">pref_gamepad_user2_type</string>
     <string name="pref_has_independent_phone_battery">pref_has_independent_phone_battery</string>
     <string name="pref_has_independent_phone_battery_rc">pref_has_independent_phone_battery_rc</string>
+    <string name="pref_has_speaker">pref_has_speaker</string>
+    <string name="pref_has_speaker_rc">pref_has_speaker_rc</string>
+    <string name="pref_last_known_macaddr">pref_last_known_macaddr</string>
+    <string name="pref_last_known_ssid">pref_last_known_ssid</string>
     <string name="pref_launch_advanced_rc_settings">pref_launch_advanced_rc_settings</string>
     <string name="pref_launch_inspect_ds">pref_launch_inspect_ds</string>
     <string name="pref_launch_inspect_rc">pref_launch_inspect_rc</string>
@@ -300,8 +335,21 @@
     <string name="pref_launch_viewlogs">pref_launch_viewlogs</string>
     <string name="pref_launch_wifi_channel_edit">pref_launch_wifi_channel_edit</string>
     <string name="pref_launch_wifi_remembered_groups_edit">pref_launch_wifi_remembered_groups_edit</string>
+    <string name="pref_lib_version">pref_lib_version</string>
+    <string name="pref_lib_version_rc">pref_lib_version_rc</string>
+    <string name="pref_match_logging_on_off">pref_match_logging_on_off</string>
+    <string name="pref_match_logging_on_off_not_supported">Not supported on KitKat.</string>
+    <string name="pref_match_logging_on_off_summary">Adds the ability to specify match numbers and store per-match log files in /sdcard/FIRST/matchlogs on the robot controller.</string>
+    <string name="pref_match_logging_on_off_title">Match Logging</string>
+    <string name="pref_network_connection_info">pref_network_connection_info</string>
+    <string name="pref_network_connection_info_rc">pref_network_connection_info_rc</string>
     <string name="pref_network_connection_type">pref_network_connection_type</string>
+    <string name="pref_network_protocol_version">pref_network_protocol_version</string>
+    <string name="pref_network_protocol_version_rc">pref_network_protocol_version_rc</string>
     <string name="pref_pair_rc">pref_pair_rc</string>
+    <string name="pref_pairing_kind">pref_pairing_kind</string>
+    <string name="pref_pairing_kind_default">"WifiDirect"</string>
+    <string name="pref_pairing_kind_title">Pairing Kind</string>
     <string name="pref_rc_connected">pref_rc_connected</string>
     <string name="pref_sound_on_off">pref_sound_on_off</string>
     <string name="pref_sound_on_off_rc">pref_sound_on_off_rc</string>
@@ -310,6 +358,8 @@
     <string name="pref_wifip2p_groupowner_lastconnectedto">pref_wifip2p_groupowner_lastconnectedto</string>
     <string name="pref_wifip2p_groupowner_map">pref_wifip2p_groupowner_map</string>
     <string name="pref_wifip2p_remote_channel_change_works">pref_wifip2p_remote_channel_change_works</string>
+    <string name="prefcat_about_ds">About Driver Station</string>
+    <string name="prefcat_about_rc">About Robot Controller</string>
     <string name="prefcat_configure_ds">Driver Station Settings</string>
     <string name="prefcat_configure_robot">Robot Controller Settings</string>
     <string name="prefcat_gamepad">Gamepads</string>
@@ -342,16 +392,21 @@
     <string name="prefedit_remembered_groups">Clear Wifi Direct Groups</string>
     <string name="prefedit_sound_on_off">Sound</string>
     <string name="prefedit_sound_on_off_summary">Turn app sounds on or off</string>
+    <string name="prefedit_sound_on_off_summary_ds">Turn driver station app sounds on or off</string>
     <string name="prefedit_sound_on_off_summary_rc">Turn robot controller app sounds on or off</string>
     <string name="prefedit_view_logs">View Logs</string>
     <string name="prefedit_view_logs_summary">Shows recently-logged activity of the robot controller.</string>
     <string name="preferred_imu_name">imu</string>
     <string name="progressPleaseWait">Please wait</string>
+    <string name="rev_20_hd_hex_name">REV Robotics 20:1 HD Hex Motor</string>
+    <string name="rev_40_hd_hex_name">REV Robotics 40:1 HD Hex Motor</string>
+    <string name="rev_blinkin_description">a REV Blinkin LED Driver</string>
+    <string name="rev_blinkin_name">REV Blinkin LED Driver</string>
     <string name="rev_core_hex_name">REV Robotics Core Hex Motor</string>
-    <string name="rev_core_hex_xmltag">RevRoboticsCoreHexMotor</string>
     <string name="rev_distributor">REV Robotics</string>
-    <string name="rev_hd_hex_name">REV Robotics HD Hex Motor</string>
-    <string name="rev_hd_hex_xmltag">RevRoboticsHDHexMotor</string>
+    <string name="rev_laser_sensor_description">a REV 2M (Time of Flight) Distance Sensor</string>
+    <string name="rev_laser_sensor_name">REV 2M Distance Sensor</string>
+    <string name="rev_touch_sensor_description">a REV touch sensor</string>
     <string name="robotStateEmergencyStop">EMERGENCY STOP</string>
     <string name="robotStateInit">initializing</string>
     <string name="robotStateInternalError">internal error</string>
@@ -370,7 +425,11 @@
     <string name="robotStatusWaitingOnWifiDirect">waiting for Wifi Direct to enable</string>
     <string name="setWifiChannelFailure">Unable to change Wifi Direct channel to \'%s\'</string>
     <string name="setWifiChannelSuccess">Changed Wifi Direct channel to \'%s\'</string>
+    <string name="standard_servo_description">a servo</string>
+    <string name="toastDisableWifi">Disabling WiFi</string>
+    <string name="toastDisableWifiWarn">WiFi disable in\u0020</string>
     <string name="toastDisconnectedFromWifiDirect">Successfully disconnected from WiFi Direct</string>
+    <string name="toastEnableWifi">Enabling WiFi</string>
     <string name="toastErrorDisconnectingFromWifiDirect">There was an error disconnecting from WiFi Direct</string>
     <string name="toastOpModeStuck">OpMode stuck in %s. Restarting robot controller app.</string>
     <string name="toastRebootRC">Rebooting Robot Controller</string>
@@ -380,7 +439,27 @@
     <string name="tokenThemePurple">purple</string>
     <string name="tokenThemeRed">red</string>
     <string name="tokenThemeTeal">teal</string>
+    <string name="unavailable">unavailable</string>
     <string name="unknown_wifi_direct_channel">Unknown channel</string>
+    <string name="usb_pid_name_logitech_c310">HD Pro Webcam C310</string>
+    <string name="usb_pid_name_logitech_c920">HD Pro Webcam C920</string>
+    <string name="usb_vid_name_dell">Dell</string>
+    <string name="usb_vid_name_ftdi">FTDI</string>
+    <string name="usb_vid_name_generic">Generic</string>
+    <string name="usb_vid_name_google">Google</string>
+    <string name="usb_vid_name_logitech">Logitech</string>
+    <string name="usb_vid_name_microsoft">Microsoft</string>
+    <string name="usb_vid_name_qualcomm">Qualcomm</string>
+    <string name="warningProblemCommunicatingWithUSBDevice">problem communicating with %s</string>
+    <string name="warningUSBDeviceDetached">%s detached</string>
+    <string name="warningUnableToOpen">unable to open %s</string>
+    <string name="webcamNotFound">unable to find webcam with serial number %s</string>
+    <string name="webcamNotFoundWithName">unable to find webcam \"%1$s\" with serial number %2$s</string>
+    <string name="wifiApDescription">Wireless access point pairing is used to pair a driver station with a robot controller
+        running on a Control Hub (use WifiDirect to pair with other robot controllers).\n\nEach Control Hub robot controller hosts its
+        own Wifi network named with the name of the robot controller (default password: \"password\"). Click the button below to use the system Wifi Settings of
+        your driver station to select the network of the robot controller you want to pair with.</string>
+    <string name="wirelessApStatusLabel">Status: </string>
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!-- Theme customizations available in newer API levels can go in res/values-vXX/styles.xml,
         while customizations related to backward-compatibility can go here. -->
