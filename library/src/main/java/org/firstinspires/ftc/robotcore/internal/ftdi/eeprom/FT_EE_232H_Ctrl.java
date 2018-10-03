@@ -114,7 +114,7 @@ public class FT_EE_232H_Ctrl extends FT_EE_Ctrl
 
                 if (eeprom.PowerSaveEnable)
                     {
-                    dataToWrite[0] |= '耀';
+                    dataToWrite[0] |= '\u8000';
                     }
 
                 dataToWrite[1] = eeprom.VendorId;
@@ -295,7 +295,7 @@ public class FT_EE_232H_Ctrl extends FT_EE_Ctrl
                     eeprom.FT1248FlowControl = false;
                     }
 
-                if ((data[0] & '耀') > 0)
+                if ((data[0] & '\u8000') > 0)
                     {
                     eeprom.PowerSaveEnable = true;
                     }
