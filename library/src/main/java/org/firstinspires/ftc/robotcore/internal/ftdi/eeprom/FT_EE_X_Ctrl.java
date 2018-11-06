@@ -238,7 +238,7 @@ public class FT_EE_X_Ctrl extends FT_EE_Ctrl
 
                 if (eeprom.InvertRI)
                     {
-                    dataToWrite[5] |= '耀';
+                    dataToWrite[5] |= '\u8000';
                     }
 
                 dataToWrite[6] = 0;
@@ -359,7 +359,7 @@ public class FT_EE_X_Ctrl extends FT_EE_Ctrl
     boolean programXeeprom(int[] dataToWrite, int ee_size) throws RobotUsbException
         {
         int checksumLocation = ee_size;
-        int Checksum = 'ꪪ';
+        int Checksum = '\uaaaa';
         boolean TempChecksum = false;
         int addressCounter = 0;
         boolean a = false;
@@ -376,7 +376,7 @@ public class FT_EE_X_Ctrl extends FT_EE_Ctrl
             int var11 = var10 << 1;
             var11 &= '\uffff';
             byte var12;
-            if ((var10 & '耀') > 0)
+            if ((var10 & '\u8000') > 0)
                 {
                 var12 = 1;
                 }
@@ -570,7 +570,7 @@ public class FT_EE_X_Ctrl extends FT_EE_Ctrl
                 eeprom.InvertDCD = false;
                 }
 
-            if ((dataRead[5] & '耀') == '耀')
+            if ((dataRead[5] & '\u8000') == '\u8000')
                 {
                 eeprom.InvertRI = true;
                 }

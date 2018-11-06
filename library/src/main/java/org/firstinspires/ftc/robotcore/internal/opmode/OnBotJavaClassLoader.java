@@ -44,6 +44,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import dalvik.system.DexFile;
@@ -66,7 +67,7 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
     // State
     //----------------------------------------------------------------------------------------------
 
-    public static final String TAG = OnBotJavaManager.TAG + ":ClassLoader";
+        public static final String TAG = "OnBotJava:ClassLoader";
 
     protected List<File>    jarFiles;
     protected List<DexFile> dexFiles;
@@ -77,7 +78,7 @@ public class OnBotJavaClassLoader extends ClassLoader implements Closeable
 
     public OnBotJavaClassLoader()
         {
-        this(OnBotJavaClassLoader.class.getClassLoader(), OnBotJavaManager.getOutputJarFiles());
+            this(OnBotJavaClassLoader.class.getClassLoader(), Collections.<File>emptyList());
         }
 
     public OnBotJavaClassLoader(ClassLoader parentClassLoader, List<File> jarFiles)

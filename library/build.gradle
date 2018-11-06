@@ -7,7 +7,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 19
         versionCode 12
-        versionName "4.3.0"
+        versionName "4.3.0-lite"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -27,7 +27,7 @@ android {
     }
 }
 
-group = 'com.github.Pattonville-Robotics'
+group = 'com.github.modular-ftc'
 version = android.defaultConfig.versionName
 project.archivesBaseName = 'robotcore-repackaged'
 
@@ -41,9 +41,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.danilopianini:gson-extras:0.2.1'
-
-    implementation 'com.google.errorprone:javac:1.8.0-u20'
-
 }
 
 //For JitPack
