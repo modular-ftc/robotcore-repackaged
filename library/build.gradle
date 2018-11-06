@@ -36,6 +36,9 @@ dependencies {
 
     implementation 'com.github.modular-ftc:vuforia-repackaged:4.3.0'
 
+    implementation "org.first.ftc:tensorflow-lite:4.3"
+    implementation "org.first.ftc:tfod:4.3"
+
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.danilopianini:gson-extras:0.2.1'
 
