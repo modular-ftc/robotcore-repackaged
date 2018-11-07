@@ -162,7 +162,6 @@ public class ClassManager {
     protected List<Class> classNamesToClasses(Collection<String> classNames)
     {
         List<Class> result = new LinkedList<Class>();
-        OnBotJavaClassLoader classLoader = new OnBotJavaClassLoader();
         try
         {
             for (String className : classNames)
@@ -184,7 +183,7 @@ public class ClassManager {
                 Class clazz;
                 try
                 {
-                    clazz = Class.forName(className, false, classLoader);
+                    clazz = Class.forName(className);
                     // RobotLog.dd(TAG, "class %s: loader=%s", className, clazz.getClassLoader().getClass().getSimpleName());
                 }
                 catch (NoClassDefFoundError|ClassNotFoundException ex)
@@ -209,26 +208,14 @@ public class ClassManager {
         }
         finally
         {
-            classLoader.close();
+
         }
     }
 
     protected Set<String> getOnBotJavaClassNames()
     {
         Set<String> classNames = new HashSet<String>();
-        OnBotJavaClassLoader onBotJavaClassLoader = new OnBotJavaClassLoader();
-        try
-        {
-            for (DexFile dexFile : onBotJavaClassLoader.getDexFiles())
-            {
-                 classNames.addAll(Collections.list(dexFile.entries()));
-            }
-            return classNames;
-        }
-        finally
-        {
-            onBotJavaClassLoader.close();
-        }
+        return classNames;
     }
 
     protected boolean logClassNotFound(String className)
@@ -273,7 +260,6 @@ public class ClassManager {
             f.filterOnBotJavaClassesStart();
             for (Class clazz : onBotJavaClasses)
             {
-                Assert.assertTrue(OnBotJavaClassLoader.isOnBotJava(clazz), "class %s isn't OnBotJava: loader=%s", clazz.getSimpleName(), clazz.getClassLoader().getClass().getSimpleName());
                 f.filterOnBotJavaClass(clazz);
             }
             f.filterOnBotJavaClassesComplete();
