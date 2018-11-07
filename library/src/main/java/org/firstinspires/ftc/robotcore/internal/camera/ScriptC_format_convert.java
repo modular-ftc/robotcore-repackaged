@@ -19,6 +19,7 @@
  */
 package org.firstinspires.ftc.robotcore.internal.camera;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.renderscript.Allocation;
 import android.renderscript.BaseObj;
@@ -26,7 +27,9 @@ import android.renderscript.Element;
 import android.renderscript.FieldPacker;
 import android.renderscript.RSRuntimeException;
 import android.renderscript.RenderScript;
+import android.renderscript.Script;
 import android.renderscript.ScriptC;
+import android.renderscript.Type;
 
 public class ScriptC_format_convert
 extends ScriptC {
@@ -64,7 +67,7 @@ extends ScriptC {
         return this.mExportVar_inputAllocation;
     }
 
-    public FieldID getFieldID_inputAllocation() {
+    public Script.FieldID getFieldID_inputAllocation() {
         return this.createFieldID(0, null);
     }
 
@@ -77,7 +80,7 @@ extends ScriptC {
         return this.mExportVar_outputWidth;
     }
 
-    public FieldID getFieldID_outputWidth() {
+    public Script.FieldID getFieldID_outputWidth() {
         return this.createFieldID(1, null);
     }
 
@@ -90,11 +93,11 @@ extends ScriptC {
         return this.mExportVar_outputHeight;
     }
 
-    public FieldID getFieldID_outputHeight() {
+    public Script.FieldID getFieldID_outputHeight() {
         return this.createFieldID(2, null);
     }
 
-    public KernelID getKernelID_yuv2_to_argb8888() {
+    public Script.KernelID getKernelID_yuv2_to_argb8888() {
         return this.createKernelID(1, 58, null, null);
     }
 
@@ -102,7 +105,7 @@ extends ScriptC {
         this.forEach_yuv2_to_argb8888(aout, null);
     }
 
-    public void forEach_yuv2_to_argb8888(Allocation aout, LaunchOptions sc) {
+    public void forEach_yuv2_to_argb8888(Allocation aout, Script.LaunchOptions sc) {
         if (!aout.getType().getElement().isCompatible(this.__U8_4)) {
             throw new RSRuntimeException("Type mismatch with U8_4!");
         }

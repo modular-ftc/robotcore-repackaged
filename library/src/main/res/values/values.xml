@@ -406,6 +406,8 @@
     <string name="rev_distributor">REV Robotics</string>
     <string name="rev_laser_sensor_description">a REV 2M (Time of Flight) Distance Sensor</string>
     <string name="rev_laser_sensor_name">REV 2M Distance Sensor</string>
+    <string name="rev_spark_mini_description">a REV SPARK Mini Motor Controller</string>
+    <string name="rev_spark_mini_name">REV SPARK Mini Controller</string>
     <string name="rev_touch_sensor_description">a REV touch sensor</string>
     <string name="robotStateEmergencyStop">EMERGENCY STOP</string>
     <string name="robotStateInit">initializing</string>
