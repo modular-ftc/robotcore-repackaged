@@ -148,22 +148,6 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
         {
         this.registeredOpModes = registeredOpModes;
         try {
-            this.callOpModeRegistrarMethods(new Predicate<Class>()
-                {
-                @Override public boolean test(Class clazz)
-                    {
-                    return OnBotJavaClassLoader.isOnBotJava(clazz);
-                    }
-                });
-
-            for (Class<OpMode> clazz : filteredAnnotatedOpModeClasses)
-                {
-                if (OnBotJavaClassLoader.isOnBotJava(clazz))
-                    {
-                    addAnnotatedOpMode(clazz);
-                    }
-                }
-
             for (OpModeMetaAndClass opModeMetaAndClass : newOpModes)
                 {
                 String name = getOpModeName(opModeMetaAndClass);
@@ -284,40 +268,6 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
     @Override public void filterOnBotJavaClassesStart()
         {
         newOpModes.clear();
-
-        // NB: n-squared implementations, but n is small
-
-        for (OpModeMetaAndClass opModeMetaAndClass : new ArrayList<>(classNameOverrides.values()))
-            {
-            if (opModeMetaAndClass.isOnBotJava())
-                {
-                classNameOverrides.remove(opModeMetaAndClass.clazz);
-                }
-            }
-
-        for (OpModeMetaAndClass opModeMetaAndClass : new ArrayList<>(knownOpModes))
-            {
-            if (opModeMetaAndClass.isOnBotJava())
-                {
-                knownOpModes.remove(opModeMetaAndClass);
-                }
-            }
-
-        for (Class<OpMode> clazz : new ArrayList<>(filteredAnnotatedOpModeClasses))
-            {
-            if (OnBotJavaClassLoader.isOnBotJava(clazz))
-                {
-                filteredAnnotatedOpModeClasses.remove(clazz);
-                }
-            }
-
-        for (Method method : new ArrayList<>(registrarMethods))
-            {
-            if (OnBotJavaClassLoader.isOnBotJava(method.getDeclaringClass()))
-                {
-                registrarMethods.remove(method);
-                }
-            }
         }
 
     @Override public void filterAllClassesComplete()

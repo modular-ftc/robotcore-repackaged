@@ -42,8 +42,6 @@ import com.qualcomm.robotcore.hardware.configuration.ConfigurationTypeManager;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.util.ClassUtil;
 
-import org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaClassLoader;
-
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -67,7 +65,7 @@ public abstract class UserConfigurationType implements ConfigurationType, Serial
 
     private @Expose @NonNull final DeviceFlavor flavor;
     private @Expose @NonNull       String xmlTag;
-    private @Expose @NonNull       String[] xmlTagAliases;
+    private @Expose                String[] xmlTagAliases;
     private @Expose                boolean builtIn = false;
     private @Expose                boolean isOnBotJava;
     private @Expose @NonNull       ControlSystem[] compatibleControlSystems = {MODERN_ROBOTICS, REV_HUB};
@@ -81,7 +79,7 @@ public abstract class UserConfigurationType implements ConfigurationType, Serial
         {
         this.flavor = flavor;
         this.xmlTag = xmlTag;
-        this.isOnBotJava = OnBotJavaClassLoader.isOnBotJava(clazz);
+        this.isOnBotJava = false;
         this.isDeprecated = clazz.isAnnotationPresent(Deprecated.class);
         }
 
@@ -109,6 +107,11 @@ public abstract class UserConfigurationType implements ConfigurationType, Serial
         if (name.isEmpty())
             {
             name = clazz.getSimpleName();
+            }
+
+        if (xmlTagAliases == null)
+            {
+            xmlTagAliases = new String[]{};
             }
         }
 
