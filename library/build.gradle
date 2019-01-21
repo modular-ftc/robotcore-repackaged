@@ -5,6 +5,8 @@ android {
     compileSdkVersion 27
     defaultConfig {
         minSdkVersion 19
+        // Required to bypass runtime Camera permissions
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 19
         versionCode 12
         versionName "4.3.0-lite"
@@ -32,15 +34,18 @@ version = android.defaultConfig.versionName
 project.archivesBaseName = 'robotcore-repackaged'
 
 dependencies {
-    implementation 'com.android.support:support-annotations:28.0.0'
-
-    implementation 'com.github.modular-ftc:vuforia-repackaged:4.3.0'
-
+    // Original dependencies
     implementation "org.first.ftc:tensorflow-lite:4.3"
     implementation "org.first.ftc:tfod:4.3"
 
+    // Repackaged dependencies
+    implementation 'com.github.modular-ftc:vuforia-repackaged:4.3.0'
+
+    // Android dependencies
+    implementation 'com.android.support:support-annotations:28.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.danilopianini:gson-extras:0.2.1'
+
 }
 
 //For JitPack
@@ -53,6 +58,7 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     failOnError false
+    options.encoding 'UTF-8'
     source = android.sourceSets.main.java.sourceFiles
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
