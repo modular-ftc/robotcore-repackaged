@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.hardware.DeviceManager;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.SerialNumber;
 
-import junit.framework.Assert;
+import org.firstinspires.ftc.robotcore.internal.system.Assert;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
