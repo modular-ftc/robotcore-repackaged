@@ -8,3 +8,7 @@ Files modified:
 - `src/main/java/org/firstinspires/ftc/robotcore/internal/opmode/AnnotatedOpModeClassFilter.java`
 - `src/main/java/org/firstinspires/ftc/robotcore/internal/opmode/ClassManager.java`
 - `src/main/java/org/firstinspires/ftc/robotcore/internal/opmode/OnBotJavaClassLoader.java`
+- `src/main/assets/**`
+  - `src/main/assets/Buildings.jpeg`
+  - `src/main/assets/Buildings.txt`
+  - `src/main/assets/TextureTeapotBrass.png`
