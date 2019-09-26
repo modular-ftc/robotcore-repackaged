@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qualcomm.robotcore"
-    android:versionCode="55"
-    android:versionName="8.9" >
+    android:versionCode="64"
+    android:versionName="11.6" >
+
+    <uses-sdk android:targetSdkVersion="26" />
 
     <uses-permission
         android:name="android.permission.ACCESS_WIFI_STATE"
@@ -20,22 +22,19 @@
     <uses-permission
         android:name="android.permission.INTERNET"
         android:required="true" />
+
+    <!-- Classified as Dangerous Permission in SDK 26 -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:required="true" />
+    <!-- Classified as Dangerous Permission in SDK 26 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:required="true" />
+
+    <!-- Classified as System Permission in SDK 26 -->
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
-        android:required="true" />
-
-    <!--
-       "Allows applications to access serial ports via the SerialManager.". So, uncertain we need,
-       as we don't use the SerialManager.
-    -->
-    <uses-permission
-        android:name="android.permission.SERIAL_PORT"
         android:required="true" />
 
     <!-- see AppUtil.setTimeZone() -->
@@ -53,6 +52,9 @@
         android:required="true" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission
+        android:name="com.revrobotics.permission.UPDATE_CONTROL_HUB"
+        android:required="true" />
 
     <uses-feature android:name="android.hardware.usb.accessory" />
     <uses-feature android:glEsVersion="0x00020000" />
@@ -84,12 +86,21 @@
 
         <!-- Service that provides build services for OnBotJava -->
         <service
-            android:name="org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaService"
+            android:name="org.firstinspires.ftc.onbotjava.OnBotJavaService"
             android:enabled="true" />
 
         <meta-data
-            android:name="autoStartService.org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaService"
+            android:name="autoStartService.org.firstinspires.ftc.onbotjava.OnBotJavaService"
             android:value="RC|2000" />
+
+        <receiver
+            android:name="org.firstinspires.ftc.robotserver.internal.webserver.controlhubupdater.ChUpdaterCommManager$ChUpdaterBroadcastReceiver"
+            android:exported="true"
+            android:permission="android.permission.INSTALL_PACKAGES" >
+            <intent-filter>
+                <action android:name="com.revrobotics.controlhubupdater.broadcast.RESULT_BROADCAST" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

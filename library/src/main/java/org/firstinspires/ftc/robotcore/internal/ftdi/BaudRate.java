@@ -24,7 +24,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -45,6 +45,7 @@ public final class BaudRate extends FtConstants
         {
         }
 
+    /** @hide */
     public static byte getDivisor(int rate, int[] divisors, boolean isBitModeDevice)
         {
         byte divisor;
@@ -195,7 +196,7 @@ public final class BaudRate extends FtConstants
                 }
             }
         }
-
+    /** @hide */
     private static int calcBaudRate(int divisor, int extdiv, boolean isBitModeDevice)
         {
         if (divisor == 0)

@@ -21,7 +21,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -52,6 +52,7 @@ import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 
 import java.io.File;
 import java.util.Arrays;
@@ -65,7 +66,7 @@ import java.util.concurrent.BlockingQueue;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Mobile_robot_navigation">Mobile robot navigation</a>
  */
-public interface VuforiaLocalizer
+public interface VuforiaLocalizer extends CameraStreamSource
     {
     /**
      * Loads a Vuforia dataset from the indicated application asset, which must be of

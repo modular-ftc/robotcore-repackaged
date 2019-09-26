@@ -25,7 +25,6 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Build;
@@ -36,10 +35,15 @@ import android.view.Surface;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.function.ContinuationResult;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamServer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -75,6 +79,8 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
   private final List<Interpreter> interpreters = new ArrayList<>();
   private final List<String> labels = new ArrayList<>();
 
+  private final ClippingMargins clippingMargins = new ClippingMargins();
+
   // Parameters passed in through the constructor.
   private TfodParameters params;
   private VuforiaLocalizer vuforiaLocalizer;
@@ -98,8 +104,11 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
   private AnnotatedYuvRgbFrame annotatedFrame;
   private long lastReturnedFrameTime = 0;
 
+  private final Object bitmapFrameLock = new Object();
+  private Continuation<? extends Consumer<Bitmap>> bitmapContinuation;
+
   /**
-   * Return true if this device is compatible with Tensor Flow Object Detection, false otherwise.
+   * Return true if this device is compatible with TensorFlow Object Detection, false otherwise.
    */
   public static boolean isDeviceCompatible() {
     // Requires Android 6.0+
@@ -118,7 +127,7 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
         : appUtil.getRootActivity();
 
     rotation = getRotation(activity, vuforiaLocalizer.getCameraName());
-    frameGenerator = new VuforiaFrameGenerator(vuforiaLocalizer, rotation);
+    frameGenerator = new VuforiaFrameGenerator(vuforiaLocalizer, rotation, clippingMargins);
 
     createImageViewIfRequested(activity, parameters);
 
@@ -145,6 +154,8 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
     if (imageView != null) {
       updateImageView(annotatedFrame);
     }
+
+    CameraStreamServer.getInstance().setSource(this);
   }
 
   private static TfodParameters makeTfodParameters(Parameters parameters) {
@@ -290,6 +301,18 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
       frameManager.drawDebug(canvas);
     }
 
+    synchronized (bitmapFrameLock) {
+      if (bitmapContinuation != null) {
+        bitmapContinuation.dispatch(new ContinuationResult<Consumer<Bitmap>>() {
+          @Override
+          public void handle(Consumer<Bitmap> bitmapConsumer) {
+            bitmapConsumer.accept(bitmap);
+          }
+        });
+        bitmapContinuation = null;
+      }
+    }
+
     appUtil.synchronousRunOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -339,6 +362,40 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
   public void deactivate() {
     if (frameManager != null) {
       frameManager.deactivate();
+    }
+  }
+
+  @Override
+  public void setClippingMargins(int left, int top, int right, int bottom) {
+    synchronized (clippingMargins) {
+      switch (rotation) {
+        default:
+          throw new IllegalStateException("rotation must be 0, 90, 180, or 270.");
+        case 0:
+          clippingMargins.left = left;
+          clippingMargins.top = top;
+          clippingMargins.right = right;
+          clippingMargins.bottom = bottom;
+          break;
+        case 90:
+          clippingMargins.left = bottom;
+          clippingMargins.top = left;
+          clippingMargins.right = top;
+          clippingMargins.bottom = right;
+          break;
+        case 180:
+          clippingMargins.left = right;
+          clippingMargins.top = bottom;
+          clippingMargins.right = left;
+          clippingMargins.bottom = top;
+          break;
+        case 270:
+          clippingMargins.left = top;
+          clippingMargins.top = right;
+          clippingMargins.right = bottom;
+          clippingMargins.bottom = left;
+          break;
+      }
     }
   }
 
@@ -393,6 +450,13 @@ public class TFObjectDetectorImpl implements TFObjectDetector {
     }
 
     return null;
+  }
+
+  @Override
+  public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+    synchronized (bitmapFrameLock) {
+      bitmapContinuation = continuation;
+    }
   }
 
   private static List<Recognition> makeRecognitionsList(@NonNull AnnotatedYuvRgbFrame frame) {

@@ -9,7 +9,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 19
         versionCode 13
-        versionName "4.3.1"
+        versionName "5.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -35,17 +35,19 @@ project.archivesBaseName = 'robotcore-repackaged'
 
 dependencies {
     // Original dependencies
-    implementation "org.first.ftc:tensorflow-lite:4.3"
-    implementation "org.first.ftc:tfod:4.3"
+    implementation "org.first.ftc:tensorflow-lite:5.2"
+    implementation "org.first.ftc:tfod:5.2"
 
     // Repackaged dependencies
-    implementation 'com.github.modular-ftc:vuforia-repackaged:4.3.0'
+    implementation 'com.github.modular-ftc:vuforia-repackaged:5.2.0'
 
     // Android dependencies
     implementation 'com.android.support:support-annotations:28.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.danilopianini:gson-extras:0.2.1'
     implementation 'com.google.errorprone:javac:1.8.0-u20'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'androidx.versionedparcelable:versionedparcelable:1.1.0'
 
 }
 

@@ -2,8 +2,6 @@
  * Decompiled with CFR 0_133.
  * 
  * Could not load the following classes:
- *  android.content.Context
- *  android.content.res.Resources
  *  android.renderscript.Allocation
  *  android.renderscript.BaseObj
  *  android.renderscript.Element
@@ -19,8 +17,6 @@
  */
 package org.firstinspires.ftc.robotcore.internal.camera;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.renderscript.Allocation;
 import android.renderscript.BaseObj;
 import android.renderscript.Element;
@@ -30,6 +26,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.Script;
 import android.renderscript.ScriptC;
 import android.renderscript.Type;
+import org.firstinspires.ftc.robotcore.internal.camera.format_convertBitCode;
 
 public class ScriptC_format_convert
 extends ScriptC {
@@ -48,11 +45,7 @@ extends ScriptC {
     private static final int mExportForEachIdx_yuv2_to_argb8888 = 1;
 
     public ScriptC_format_convert(RenderScript rs) {
-        this(rs, rs.getApplicationContext().getResources(), rs.getApplicationContext().getResources().getIdentifier(__rs_resource_name, "raw", rs.getApplicationContext().getPackageName()));
-    }
-
-    public ScriptC_format_convert(RenderScript rs, Resources resources, int id) {
-        super(rs, resources, id);
+        super(rs, __rs_resource_name, format_convertBitCode.getBitCode32(), format_convertBitCode.getBitCode64());
         this.__ALLOCATION = Element.ALLOCATION((RenderScript)rs);
         this.__I32 = Element.I32((RenderScript)rs);
         this.__U8_4 = Element.U8_4((RenderScript)rs);
