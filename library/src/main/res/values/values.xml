@@ -160,11 +160,11 @@
     <color name="very_very_dark_purple">#14012d</color>
     <color name="very_very_dark_red">#2d0104</color>
     <color name="very_very_dark_teal">#01212d</color>
-    <declare-styleable name="ColorListPreference"><attr format="reference" name="colors"/></declare-styleable>
     <string name="VUFORIA_INIT_ERROR_DEVICE_NOT_SUPPORTED">Failed to initialize Vuforia. This device is not supported.</string>
-    <string name="VUFORIA_INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia. Camera not accessible</string>
+    <string name="VUFORIA_INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia because the camera is not accessible.  If using a webcam check that it is connected to a USB hub.  If using either
+       the phone camera or a webcam check that the application has the Camera permission.</string>
     <string name="VUFORIA_INIT_LICENSE_ERROR_CANCELED_KEY">This app license key has been canceled and may no longer be used. Please get a new license key.</string>
-    <string name="VUFORIA_INIT_LICENSE_ERROR_INVALID_KEY">Invalid Key used. Please make sure you are using a valid Vuforia App Key.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_INVALID_KEY">Invalid Vuforia App Key used. See the Vuforia Samples for comments on obtaining a Vuforia Key.</string>
     <string name="VUFORIA_INIT_LICENSE_ERROR_MISMATCH_KEY">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
     <string name="VUFORIA_INIT_LICENSE_ERROR_MISSING_KEY">Vuforia App key is missing. Please get a valid key, by logging into your account at developer.vuforia.com and creating a new project.</string>
     <string name="VUFORIA_INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">No network available. Please make sure you are connected to the Internet.</string>
@@ -188,6 +188,7 @@
     <string name="buttonNameCancel">Cancel</string>
     <string name="buttonNameOK">OK</string>
     <string name="buttonWirelessApSettingsLabel">Wifi Settings</string>
+    <string name="ch_updater_not_supported">This device does not include the ControlHubUpdater.</string>
     <string name="configGivingUpOnCommand">Giving up on command %1$s(%2$d) after %3$d attempts</string>
     <string name="configTypeAdafruitColorSensor">Adafruit Color Sensor</string>
     <string name="configTypeAnalogInput">Analog Input</string>
@@ -258,6 +259,9 @@
     <string name="errorOpModeStuck">OpMode \'%1$s\' stuck in %2$s. Restarting robot controller app.</string>
     <string name="incompatibleAppsError">Incompatible apps: %1$s=v%2$d vs %3$s=v%4$d.</string>
     <string name="led_description">an LED</string>
+    <string name="locationServices">The Driver Station has detected that it can not find any WifiDirect peers and Location Services is
+    turned off at a System Level.  Google\'s Android operating system, Oreo and above, requires Locations Services to be on in order to scan
+    for Wifi Direct peers.  Pressing Ok will redirect you to the Location Services setting page where this may be enabled.</string>
     <string name="lynxAnalogInputControllerDisplayName">Expansion Hub Analog Input Controller</string>
     <string name="lynxDcMotorControllerDisplayName">Expansion Hub DC Motor Controller</string>
     <string name="lynxDigitalChannelControllerDisplayName">Expansion Hub Digital Channel Controller</string>
@@ -301,6 +305,29 @@
     <string name="pairing_kind_title">"Pairing Method"</string>
     <string name="peerStatusConnected">connected</string>
     <string name="peerStatusDisconnected">disconnected</string>
+    <string name="permAccessCoarseLocationExplain">The SDK infrastructure does WiFi scans to help with pairing of
+    phones.  Knowing what access points are available can allow an application to know a coarse approximation of its
+    location.  Even though the SDK does not use location information, Android requires that we ask for this permission.
+    It is not possible to run the application without this permission.  You must allow all permissions.</string>
+    <string name="permDsReadExternalStorageExplain">The Driver Station must be able to access external storage
+    for robot logging.  It is not possible to run the application without this permission.  You must allow all permissions.</string>
+    <string name="permDsWriteExternalStorageExplain">The Driver Station must be able to access external storage
+    for robot logging.  It is not possible to run the application without this permission.  You must allow all permissions.</string>
+    <string name="permGenericExplain">
+    It is not possible to run the application without this permission.  You must allow all permissions.</string>
+    <string name="permPermanentlyDenied">
+    Permission has been permanently denied for one or more resources.  The %s can not run.</string>
+    <string name="permPermanentlyDeniedRecovery">
+    Click here to be redirected to the Settings activity, then select Permissions and enable %s</string>
+    <string name="permRcCameraExplain">The Robot Controller must be able to access the camera in order to enable
+    Vuforia and Tensorflow features.  Regardless of whether or not your OpMode uses these features, you must allow
+    this permission. It is not possible to run the application without this permission.  You must allow all permissions.</string>
+    <string name="permRcReadExternalStorageExplain">The Robot Controller must be able to access external storage
+    for the Blocks and OnBot Java developement environments and robot logging.  It is not possible to run the
+    application without this permission.  You must allow all permissions.</string>
+    <string name="permRcWriteExternalStorageExplain">The Robot Controller must be able to access external storage
+    for the Blocks and OnBot Java developement environments and robot logging.  It is not possible to run the
+    application without this permission.  You must allow all permissions.</string>
     <string name="pref_app_category">pref_app_category</string>
     <string name="pref_app_category_rc">pref_app_category_rc</string>
     <string name="pref_app_theme">pref_app_theme</string>
@@ -346,6 +373,8 @@
     <string name="pref_network_connection_type">pref_network_connection_type</string>
     <string name="pref_network_protocol_version">pref_network_protocol_version</string>
     <string name="pref_network_protocol_version_rc">pref_network_protocol_version_rc</string>
+    <string name="pref_os_version">pref_os_version</string>
+    <string name="pref_os_version_rc">pref_os_version_rc</string>
     <string name="pref_pair_rc">pref_pair_rc</string>
     <string name="pref_pairing_kind">pref_pairing_kind</string>
     <string name="pref_pairing_kind_default">"WifiDirect"</string>
@@ -376,6 +405,8 @@
     <string name="prefedit_debug_driver_station_logs_summary">Record low-level internal events to the log. This may generate a large log volume.</string>
     <string name="prefedit_device_name">Device Name</string>
     <string name="prefedit_device_name_ds">Driver Station Name</string>
+    <string name="prefedit_device_name_invalid_text">Controller Name Invalid</string>
+    <string name="prefedit_device_name_invalid_title">Invalid Input</string>
     <string name="prefedit_device_name_rc">Robot Controller Name</string>
     <string name="prefedit_device_name_summary">Change the name of this device</string>
     <string name="prefedit_device_name_summary_ds">Change the name of the driver station</string>
@@ -402,12 +433,14 @@
     <string name="rev_40_hd_hex_name">REV Robotics 40:1 HD Hex Motor</string>
     <string name="rev_blinkin_description">a REV Blinkin LED Driver</string>
     <string name="rev_blinkin_name">REV Blinkin LED Driver</string>
+    <string name="rev_color_sensor_v3_description">a Rev Color Sensor v3</string>
+    <string name="rev_color_sensor_v3_name">Rev Color Sensor v3</string>
     <string name="rev_core_hex_name">REV Robotics Core Hex Motor</string>
     <string name="rev_distributor">REV Robotics</string>
     <string name="rev_laser_sensor_description">a REV 2M (Time of Flight) Distance Sensor</string>
     <string name="rev_laser_sensor_name">REV 2M Distance Sensor</string>
-    <string name="rev_spark_mini_description">a REV SPARK Mini Motor Controller</string>
-    <string name="rev_spark_mini_name">REV SPARK Mini Controller</string>
+    <string name="rev_spark_mini_description">a REV SPARKmini Motor Controller</string>
+    <string name="rev_spark_mini_name">REV SPARKmini Controller</string>
     <string name="rev_touch_sensor_description">a REV touch sensor</string>
     <string name="robotStateEmergencyStop">EMERGENCY STOP</string>
     <string name="robotStateInit">initializing</string>
@@ -442,6 +475,7 @@
     <string name="tokenThemeRed">red</string>
     <string name="tokenThemeTeal">teal</string>
     <string name="unavailable">unavailable</string>
+    <string name="unknown_control_hub_error">Running on an unknown type of Control Hub. Are you using the latest version of the software?</string>
     <string name="unknown_wifi_direct_channel">Unknown channel</string>
     <string name="usb_pid_name_logitech_c310">HD Pro Webcam C310</string>
     <string name="usb_pid_name_logitech_c920">HD Pro Webcam C920</string>
@@ -640,4 +674,7 @@
     <style name="OpModeDialogTextAppearance" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?android:attr/textColorAlertDialogListItem</item>
     </style>
+    <declare-styleable name="ColorListPreference">
+        <attr format="reference" name="colors"/>
+    </declare-styleable>
 </resources>

@@ -21,15 +21,18 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
+
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+
 import java.util.List;
 
 /**
- * Interface for Tensor Flow Object Detector.
+ * Interface for TensorFlow Object Detector.
  *
  * @author Vasu Agrawal
  * @author lizlooney@google.com (Liz Looney)
  */
-public interface TFObjectDetector {
+public interface TFObjectDetector extends CameraStreamSource {
   /**
    * Loads a TFLite model from the indicated application asset, which must be of
    * type .tflite.
@@ -57,6 +60,13 @@ public interface TFObjectDetector {
    * Deactivates this TFObjectDetector so it stops recognizing objects.
    */
   void deactivate();
+
+  /**
+   * Sets the number of pixels to obscure on the left, top, right, and bottom edges of each image
+   * passed to the TensorFlow object detector. The size of the images are not changed, but the
+   * pixels in the margins are colored black.
+   */
+  void setClippingMargins(int left, int top, int right, int bottom);
 
   /**
    * Returns the list of recognitions, but only if they are different than the last call to {@link #getUpdatedRecognitions()}.

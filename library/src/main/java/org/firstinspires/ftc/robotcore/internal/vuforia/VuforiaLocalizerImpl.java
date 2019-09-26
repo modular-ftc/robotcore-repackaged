@@ -21,7 +21,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -40,6 +40,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.opengl.GLES20;
+import android.opengl.GLException;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -98,6 +99,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamServer;
 import org.firstinspires.ftc.robotcore.internal.camera.delegating.SwitchableCameraName;
 import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
 import org.firstinspires.ftc.robotcore.internal.opengl.AutoConfigGLSurfaceView;
@@ -116,6 +118,7 @@ import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.Vuforia
 import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.VuforiaWebcamInternal;
 
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -206,6 +209,9 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
     protected   int                     frameQueueCapacity;
     protected   Continuation<? extends Consumer<Frame>> getFrameOnce = null;
 
+    protected   final Object            bitmapFrameLock             = new Object();
+    protected   Continuation<? extends Consumer<Bitmap>> bitmapContinuation;
+
     // Some simple statistics, perhaps useful during debugging
     protected   int                     renderCount = 0;
     protected   int                     callbackCount = 0;
@@ -267,6 +273,8 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
         makeLoadingIndicator();
         loadTextures();
         startAR();
+
+        CameraStreamServer.getInstance().setSource(this);
         }
 
     /**
@@ -608,9 +616,15 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
         try {
             success = supplier.get();
             }
+        catch (VuforiaException e)
+            {
+            tracer.traceError(e, "exception in vuforia initialization: phase:%s", vuforiaInitPhase);
+            throw e;
+            }
         catch (Exception e)
             {
             tracer.traceError(e, "exception in vuforia initialization: phase:%s", vuforiaInitPhase);
+            throw e;
             }
         finally
             {
@@ -626,6 +640,7 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
         catch (Exception e)
             {
             tracer.traceError(e, "exception in vuforia deinitialization: phase:%s", vuforiaInitPhase);
+            throw e;
             }
         finally
             {
@@ -655,7 +670,12 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
                         {
                         @Override public Boolean get()
                             {
-                            return vuforiaWebcam == null || vuforiaWebcam.preVuforiaInit();
+                            boolean ret = vuforiaWebcam == null || vuforiaWebcam.preVuforiaInit();
+                            if (!ret)
+                                {
+                                throwFailure(getInitializationErrorString(Vuforia.INIT_NO_CAMERA_ACCESS));
+                                }
+                            return ret;
                             }
                         });
                     }
@@ -678,7 +698,10 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
                                 });
                             }
                             while (initProgress >= 0 && initProgress < 100);
-                            return initProgress >= 0;
+                            if (initProgress < 0) {
+                                throwFailure(getInitializationErrorString(initProgress));
+                            }
+                            return true;
                             }
                         });
                     }
@@ -1413,6 +1436,28 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
                 // Let the user do something interesting with this frame.
                 onRenderFrame();
 
+                // Grab the contents of glSurface
+                synchronized (bitmapFrameLock)
+                    {
+                    if (bitmapContinuation != null)
+                        {
+                        final Bitmap bitmap = glSurfaceToBitmap();
+                        if (bitmap != null)
+                            {
+                            bitmapContinuation.dispatch(new ContinuationResult<Consumer<Bitmap>>()
+                                {
+                                @Override
+                                public void handle(Consumer<Bitmap> bitmapConsumer)
+                                    {
+                                    bitmapConsumer.accept(bitmap);
+                                    bitmap.recycle();
+                                    }
+                                });
+                            bitmapContinuation = null;
+                            }
+                        }
+                    }
+
                 GLES20.glDisable(GLES20.GL_DEPTH_TEST);
                 renderer.end();
                 }
@@ -1516,6 +1561,45 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
         cubeMeshProgram.vertex.disableAttributes();
         }
 
+    // https://stackoverflow.com/questions/5514149/capture-screen-of-glsurfaceview-to-bitmap
+    protected @Nullable Bitmap glSurfaceToBitmap()
+        {
+        int w = viewport.extent.x;
+        int h = viewport.extent.y;
+        int x = viewport.lowerLeft.x;
+        int y = viewport.lowerLeft.y;
+
+        int[] bitmapBuffer = new int[w * h];
+        int[] bitmapSource = new int[w * h];
+        IntBuffer intBuffer = IntBuffer.wrap(bitmapBuffer);
+        intBuffer.position(0);
+
+        try
+            {
+            GLES20.glReadPixels(x, y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
+            int offset1, offset2;
+            for (int i = 0; i < h; i++)
+                {
+                offset1 = i * w;
+                offset2 = (h - i - 1) * w;
+                for (int j = 0; j < w; j++)
+                    {
+                    int texturePixel = bitmapBuffer[offset1 + j];
+                    int blue = (texturePixel >> 16) & 0xff;
+                    int red = (texturePixel << 16) & 0x00ff0000;
+                    int pixel = (texturePixel & 0xff00ff00) | red | blue;
+                    bitmapSource[offset2 + j] = pixel;
+                    }
+                }
+            }
+        catch (GLException e)
+            {
+            return null;
+            }
+
+        return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
+        }
+
     //----------------------------------------------------------------------------------------------
     // Frame Queue management
     //----------------------------------------------------------------------------------------------
@@ -1558,6 +1642,16 @@ public class VuforiaLocalizerImpl implements VuforiaLocalizer
         synchronized (this.frameQueueLock)
             {
             return this.frameQueueCapacity;
+            }
+        }
+
+
+    @Override
+    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation)
+        {
+        synchronized (bitmapFrameLock)
+            {
+            bitmapContinuation = continuation;
             }
         }
 

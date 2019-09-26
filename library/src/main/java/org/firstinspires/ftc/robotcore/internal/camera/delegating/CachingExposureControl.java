@@ -21,7 +21,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -180,7 +180,7 @@ public class CachingExposureControl implements ExposureControl, DelegatingCamera
             // 4.2.2.1.4 Exposure Time (Absolute) Control
             // When the Auto-Exposure Mode control is in Auto mode or Aperture Priority mode attempts
             // to programmatically set this control shall result in a protocol STALL and an error code
-            // of bRequestErrorCode = “Wrong state”.
+            // of bRequestErrorCode = 'Wrong state'.
             if (mode != null && mode != Mode.Unknown && mode != Mode.Auto && mode != Mode.AperturePriority)
                 {
                 delegatedExposureControl.setExposure(nsExposure, TimeUnit.NANOSECONDS);
