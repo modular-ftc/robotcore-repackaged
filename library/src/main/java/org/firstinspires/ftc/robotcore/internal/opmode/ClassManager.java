@@ -79,6 +79,7 @@ public class ClassManager {
     }
 
     private static final String TAG = "ClassManager";
+    private final boolean DEBUG = false;
 
     private List<String> packagesAndClassesToIgnore;
     private List<ClassFilter> filters;
@@ -117,7 +118,8 @@ public class ClassManager {
                 "io.netty",
                 "javax.tools",
                 "kawa",
-                "org.firstinspires.ftc.robotcore.internal.android"
+                "org.firstinspires.ftc.robotcore.internal.android",
+                "android.support.v4"
         ));
     }
 
@@ -253,7 +255,7 @@ public class ClassManager {
     public void processOnBotJavaClasses()
     {
         clearIgnoredList();
-        List<Class> onBotJavaClasses = classNamesToClasses(getOnBotJavaClassNames());
+        List<Class> onBotJavaClasses = new ArrayList<>();
 
         for (ClassFilter f : filters)
         {

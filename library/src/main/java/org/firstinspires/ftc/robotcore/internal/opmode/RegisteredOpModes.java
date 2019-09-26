@@ -21,7 +21,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -37,6 +37,7 @@ import android.support.annotation.Nullable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.exception.DuplicateNameException;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
@@ -80,7 +81,7 @@ public class RegisteredOpModes implements OpModeManager
 
     protected RecursiveFileObserver blocksOpModeMonitor;
     protected volatile boolean      blocksOpModesChanged;
-        protected FileModifyObserver onBotJavaMonitor;
+    protected FileModifyObserver    onBotJavaMonitor;
     protected volatile boolean      onBotJavaChanged;
 
     //----------------------------------------------------------------------------------------------
@@ -355,11 +356,11 @@ public class RegisteredOpModes implements OpModeManager
         {
         if (isOpmodeRegistered(meta))
             {
-            String message = String.format("An OpMode with the name '%s' is already registered; ignoring duplicate opmode", meta.name);
+            String message = String.format("An OpMode with the name '%s' is already registered; renaming duplicate opmode", meta.name);
             // Show the message in the log
             RobotLog.ww(TAG, "configuration error: %s", message);
             // Make the message appear on the driver station (only the first one will actually appear)
-            RobotLog.setGlobalErrorMsg(message);
+            RobotLog.setGlobalWarningMessage(message);
             return false;
             }
         return true;
@@ -397,6 +398,10 @@ public class RegisteredOpModes implements OpModeManager
                     {
                     opModeClasses.put(meta.name, new OpModeMetaAndClass(meta, (Class<OpMode>) opMode));
                     RobotLog.vv(AnnotatedOpModeClassFilter.TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), meta.name));
+                    }
+                else
+                    {
+                    throw new DuplicateNameException("Duplicate for " + meta.name);
                     }
                 }
             });

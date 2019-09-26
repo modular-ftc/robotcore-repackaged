@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016 Robert Atkinson
+Copyright (c) 2016 Robert Atkinson, Noah Andrews
 
 All rights reserved.
 
@@ -21,7 +21,7 @@ written permission.
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcore.internal.hardware;
+package org.firstinspires.ftc.robotcore.internal.hardware.android;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -43,54 +43,62 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
- * {@link DragonboardGPIOPin} controls an exported GPIO pin on the Dragonboard
+ * {@link GpioPin} controls an exported GPIO pin on an Android board
+ *
+ * If you're accessing a new pin, it should be defined as an abstract getter in {@link AndroidBoard}
+ * and implemented in all {@link AndroidBoard} subclasses.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class DragonboardGPIOPin implements DigitalChannel
+public class GpioPin implements DigitalChannel
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    protected abstract String getTag();
-
     public enum Active { LOW, HIGH }
 
-    public static final String TAG = "DragonboardGPIOPin";
-
-    protected final int             gpioPinNumber;
+    protected final int             rawGpioNumber;
     protected final File            path;
     protected final Active          active;
     protected LastKnown<DigitalChannel.Mode> lastKnownMode;
     protected DigitalChannel.Mode   defaultMode;
     protected boolean               defaultStateIfOutput;
+    protected String                TAG;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public DragonboardGPIOPin(int gpioPinNumber)
+    /**
+     * See comments in the {@link AndroidBoard} subclasses for documentation on calculating the raw GPIO number
+     */
+    public GpioPin(int rawGpioNumber, String name)
         {
-        this(gpioPinNumber, Mode.INPUT, false, Active.HIGH);
+        this(rawGpioNumber, Mode.INPUT, false, Active.HIGH, name);
         }
 
-    public DragonboardGPIOPin(int gpioPinNumber, boolean initialState, Active active)
+    /**
+     * See comments in the {@link AndroidBoard} subclasses for documentation on calculating the raw GPIO number
+     */
+    public GpioPin(int rawGpioNumber, boolean initialState, Active active, String name)
         {
-        this(gpioPinNumber, Mode.OUTPUT, initialState, active);
+        this(rawGpioNumber, Mode.OUTPUT, initialState, active, name);
         }
 
-    private DragonboardGPIOPin(int gpioPinNumber, DigitalChannel.Mode defaultMode, boolean defaultStateIfOutput, Active active)
+    private GpioPin(int rawGpioNumber, DigitalChannel.Mode defaultMode, boolean defaultStateIfOutput, Active active, String name)
         {
-        this.gpioPinNumber = gpioPinNumber;
-        this.path = new File(String.format("/sys/class/gpio/gpio%d", gpioPinNumber + 902)); // +902 is magic from Dragonboard spec
+        this.rawGpioNumber = rawGpioNumber;
+        this.path = new File(String.format(Locale.US, "/sys/class/gpio/gpio%d", rawGpioNumber));
         this.active = active;
         //
         this.lastKnownMode = new LastKnown<Mode>();
         this.lastKnownMode.invalidate();
         this.defaultMode = defaultMode;
         this.defaultStateIfOutput = defaultStateIfOutput;
+        this.TAG = name;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -188,12 +196,12 @@ public abstract class DragonboardGPIOPin implements DigitalChannel
 
     @Override public String getDeviceName()
         {
-        return "DB GPIO Pin";
+        return "DB GPIO Pin " + TAG;
         }
 
     @Override public String getConnectionInfo()
         {
-        return String.format("GPIO pin#", gpioPinNumber);
+        return String.format("GPIO #", rawGpioNumber);
         }
 
     @Override public int getVersion()
@@ -244,7 +252,7 @@ public abstract class DragonboardGPIOPin implements DigitalChannel
         File aspectFile = new File(getPath(), aspect);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(aspectFile)))
             {
-            RobotLog.vv(getTag(), "writing aspect=%s value=%s", aspectFile.getAbsolutePath(), value);
+            RobotLog.vv(TAG, "writing aspect=%s value=%s", aspectFile.getAbsolutePath(), value);
             writer.write(value);
             }
         }

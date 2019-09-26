@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.exception.DuplicateNameException;
 import com.qualcomm.robotcore.util.ClassUtil;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -107,6 +108,11 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
     // Operations
     //----------------------------------------------------------------------------------------------
 
+    protected String resolveDuplicateName(OpModeMetaAndClass opModeMetaAndClass)
+        {
+            return getOpModeName(opModeMetaAndClass) + "-" + opModeMetaAndClass.clazz.getSimpleName();
+        }
+
     void registerAllClasses(RegisteredOpModes registeredOpModes)
         {
         this.registeredOpModes = registeredOpModes;
@@ -127,14 +133,30 @@ public class AnnotatedOpModeClassFilter implements ClassFilter
             for (OpModeMetaAndClass opModeMetaAndClass : newOpModes)
                 {
                 String name = getOpModeName(opModeMetaAndClass);
-                this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                try
+                    {
+                    this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                    }
+                catch (DuplicateNameException e)
+                    {
+                    name = resolveDuplicateName(opModeMetaAndClass);
+                    this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                    }
                 }
             for (OpModeMetaAndClass opModeMetaAndClass : knownOpModes)
                 {
                 if (!newOpModes.contains(opModeMetaAndClass))
                     {
                     String name = getOpModeName(opModeMetaAndClass);
-                    this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                    try
+                        {
+                        this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                        }
+                    catch (DuplicateNameException e)
+                        {
+                        name = resolveDuplicateName(opModeMetaAndClass);
+                        this.registeredOpModes.register(OpModeMeta.forName(name, opModeMetaAndClass.meta), opModeMetaAndClass.clazz);
+                        }
                     }
                 }
             }
