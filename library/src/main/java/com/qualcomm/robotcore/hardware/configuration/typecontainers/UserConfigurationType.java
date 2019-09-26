@@ -42,8 +42,6 @@ import com.qualcomm.robotcore.hardware.configuration.ConfigurationTypeManager;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.util.ClassUtil;
 
-import org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaDeterminer;
-
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -81,7 +79,7 @@ public abstract class UserConfigurationType implements ConfigurationType, Serial
         {
         this.flavor = flavor;
         this.xmlTag = xmlTag;
-        this.isOnBotJava = OnBotJavaDeterminer.isOnBotJava(clazz);
+        this.isOnBotJava = false;
         this.isDeprecated = clazz.isAnnotationPresent(Deprecated.class);
         }
 

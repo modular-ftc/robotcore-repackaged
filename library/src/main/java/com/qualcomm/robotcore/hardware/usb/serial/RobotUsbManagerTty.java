@@ -41,10 +41,11 @@ import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDeviceImplBase;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbManager;
+import com.qualcomm.robotcore.util.RobotLog;
+import com.qualcomm.robotcore.util.SerialNumber;
 
 import org.firstinspires.ftc.robotcore.internal.hardware.android.AndroidBoard;
 import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbException;
-import com.qualcomm.robotcore.util.SerialNumber;
 
 import java.io.File;
 import java.io.IOException;

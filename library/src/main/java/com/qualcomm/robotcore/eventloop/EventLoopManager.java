@@ -149,11 +149,6 @@ public class EventLoopManager implements RecvLoopRunnable.RecvLoopCallback, Netw
   // Accessors
   //------------------------------------------------------------------------------------------------
 
-  public @NonNull
-  WebServer getWebServer() {
-    return eventLoopManagerClient.getWebServer();
-  }
-
   /**
    * Set a monitor for this event loop, which will immediately have the appropriate method called to
    * indicate the current peer status.

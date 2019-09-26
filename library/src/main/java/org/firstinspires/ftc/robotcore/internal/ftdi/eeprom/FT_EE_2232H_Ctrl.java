@@ -137,7 +137,7 @@ public class FT_EE_2232H_Ctrl extends FT_EE_Ctrl
 
                 if (eeprom.PowerSaveEnable)
                     {
-                    dataToWrite[0] |= '耀';
+                    dataToWrite[0] |= '\u8000';
                     }
 
                 dataToWrite[1] = eeprom.VendorId;
@@ -209,7 +209,7 @@ public class FT_EE_2232H_Ctrl extends FT_EE_Ctrl
 
                 if (eeprom.BH_SchmittInput)
                     {
-                    dataToWrite[6] |= '耀';
+                    dataToWrite[6] |= '\u8000';
                     }
 
                 boolean eeprom46 = false;
@@ -349,7 +349,7 @@ public class FT_EE_2232H_Ctrl extends FT_EE_Ctrl
                     eeprom.B_LoadD2XX = true;
                     }
 
-                short data15x00 = (short) ((var24 & '耀') >> 15);
+                short data15x00 = (short) ((var24 & '\u8000') >> 15);
                 if (data15x00 == 1)
                     {
                     eeprom.PowerSaveEnable = true;
@@ -497,8 +497,8 @@ public class FT_EE_2232H_Ctrl extends FT_EE_Ctrl
                     eeprom.BH_SlowSlew = false;
                     }
 
-                short data15x06 = (short) (data[6] & '耀');
-                if (data15x06 == '耀')
+                short data15x06 = (short) (data[6] & '\u8000');
+                if (data15x06 == '\u8000')
                     {
                     eeprom.BH_SchmittInput = true;
                     }

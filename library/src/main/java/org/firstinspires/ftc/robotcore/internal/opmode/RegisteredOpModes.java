@@ -92,7 +92,8 @@ public class RegisteredOpModes implements OpModeManager
         {
         // Setup OnBotJava monitoring system
         onBotJavaChanged = false;
-        onBotJavaMonitor = new FileModifyObserver(OnBotJavaHelper.buildSuccessfulFile, new FileModifyObserver.Listener()
+        /*
+        onBotJavaMonitor = new FileModifyObserver(OnBotJavaManager.buildSuccessfulFile, new FileModifyObserver.Listener()
             {
             @Override
             public void onFileChanged(int event, File file)
@@ -101,6 +102,7 @@ public class RegisteredOpModes implements OpModeManager
                 onBotJavaChanged = true;
                 }
             });
+            */
 
         // Setup Blocks monitoring system
         blocksOpModesChanged = false;

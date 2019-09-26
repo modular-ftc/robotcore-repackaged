@@ -107,7 +107,7 @@ public class FT_EE_Ctrl
     boolean programEeprom(int[] dataToWrite, int ee_size) throws RobotUsbException
         {
         int checksumLocation = ee_size;
-        int Checksum = 'ꪪ';
+        int Checksum = '\uaaaa';
         int addressCounter = 0;
 
         while (addressCounter < checksumLocation)
