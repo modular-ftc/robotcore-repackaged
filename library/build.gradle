@@ -39,7 +39,7 @@ dependencies {
     implementation "org.first.ftc:tfod:5.2"
 
     // Repackaged dependencies
-    implementation 'com.github.modular-ftc:vuforia-repackaged:5.2.0'
+    implementation 'com.github.modular-ftc:vuforia-repackaged:5.2.1'
 
     // Android dependencies
     implementation 'com.android.support:support-annotations:28.0.0'
