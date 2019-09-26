@@ -292,7 +292,7 @@ public class ClassUtil {
     protected static class MappedByteBufferInfo
     {
         public static Field blockField = getDeclaredField(java.nio.MappedByteBuffer.class, "block");
-        public static Field addressField = getDeclaredField(blockField.getType(), "address");
+        public static Field addressField = getDeclaredField(blockField != null ? blockField.getType() : Object.class, "address");
     }
 
     public static long memoryAddressFrom(MappedByteBuffer buffer)
